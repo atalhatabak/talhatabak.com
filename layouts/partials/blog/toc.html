@@ -1,0 +1,23 @@
+{{- /*
+  Table of contents that adapts to the document.
+
+  Notes written in Obsidian often use "#" (h1) for sections, while other
+  posts start at "##". This finds the highest heading level actually used
+  in the document and renders three levels from there, so both styles get
+  a clean, un-nested TOC.
+
+  Context: a page. Returns: HTML string ("" when there are no headings).
+*/ -}}
+{{- $html := "" -}}
+{{- $min := 7 -}}
+{{- $count := 0 -}}
+{{- range $id, $h := .Fragments.HeadingsMap -}}
+  {{- $count = add $count 1 -}}
+  {{- if lt $h.Level $min -}}{{- $min = $h.Level -}}{{- end -}}
+{{- end -}}
+{{- if and (lt $min 7) (gt $count 1) -}}
+  {{- $html = .Fragments.ToHTML $min (add $min 2 | math.Min 6 | int) false -}}
+  {{- $html = replace (string $html) `id="TableOfContents"` `class="toc-nav"` -}}
+  {{- $html = $html | emojify | safeHTML -}}
+{{- end -}}
+{{- return $html -}}

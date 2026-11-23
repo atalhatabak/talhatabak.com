@@ -1,0 +1,107 @@
+{{- /*
+  Glossary: every term in data/glossary.yaml, A–Z, with the posts that use it.
+  Used by content/glossary/index*.md (layout: glossary). Terms in posts,
+  [SELinux](term:selinux), link to their entry here: /glossary/#selinux.
+*/ -}}
+{{ define "main" }}
+  {{ $page := . }}
+
+  {{/* Terms in this language, sorted by title */}}
+  {{ $terms := slice }}
+  {{ range $key, $_ := hugo.Data.glossary }}
+    {{ with partial "blog/glossary-term.html" (dict "key" $key "page" $page) }}
+      {{ if not .text }}
+        {{ warnf "Glossary term %q has no text in data/glossary.yaml" .key }}
+      {{ else if .missing }}
+        {{ warnidf "glossary-missing-language" "Glossary term %q has no %q text in data/glossary.yaml; the default language's text is shown instead" .key .missing }}
+      {{ end }}
+      {{ $terms = $terms | append (merge . (dict "sort" (lower .title))) }}
+    {{ end }}
+  {{ end }}
+  {{ $terms = sort $terms "sort" }}
+
+  {{/* Pages that use each term (examples inside code don't count) */}}
+  {{ $uses := dict }}
+  {{ range site.Pages }}
+    {{ $p := . }}
+    {{ if ne $p.RelPermalink $page.RelPermalink }}
+      {{ $raw := $p.RawContent | replaceRE "(?s)```.*?```" "" | replaceRE "(?s)~~~.*?~~~" "" | replaceRE "`[^`\\n]*`" "" }}
+      {{ range findRESubmatch `\]\(term:([A-Za-z0-9_-]+)\)` $raw }}
+        {{ $k := lower (index . 1) }}
+        {{ $list := index $uses $k | default slice }}
+        {{ if not (in $list $p) }}
+          {{ $uses = merge $uses (dict $k ($list | append $p)) }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
+  {{/* Group by first letter, keeping the sorted order */}}
+  {{ $groups := slice }}
+  {{ $letter := "" }}
+  {{ $items := slice }}
+  {{ range $terms }}
+    {{ $l := substr .sort 0 1 }}
+    {{ if and $items (ne $l $letter) }}
+      {{ $groups = $groups | append (dict "letter" $letter "items" $items) }}
+      {{ $items = slice }}
+    {{ end }}
+    {{ $letter = $l }}
+    {{ $items = $items | append . }}
+  {{ end }}
+  {{ with $items }}
+    {{ $groups = $groups | append (dict "letter" $letter "items" .) }}
+  {{ end }}
+
+  <div class="page-shell">
+    <header class="list-header">
+      <p class="list-eyebrow">{{ partial "blog/icon.html" "glossary" }}<span>{{ i18n "blog.glossary" }}</span></p>
+      <h1 class="list-title">{{ .Title | emojify }}</h1>
+      {{ with .Description }}
+        <p class="list-lead">{{ . | markdownify }}</p>
+      {{ end }}
+      <ul class="list-stats" role="list">
+        <li>{{ partial "blog/icon.html" "hash" }}{{ i18n "blog.glossary_terms" (len $terms) }}</li>
+      </ul>
+    </header>
+
+    {{ with .Content }}
+      <div class="list-intro article-content prose dark:prose-invert">{{ . }}</div>
+    {{ end }}
+    {{ partial "blog/glossary-defs.html" . }}
+
+    {{ if gt (len $groups) 1 }}
+      <nav class="glossary-nav" aria-label="{{ i18n "blog.glossary_letters" }}">
+        {{ range $groups }}<a href="#letter-{{ .letter }}">{{ .letter }}</a>{{ end }}
+      </nav>
+    {{ end }}
+
+    {{ range $groups }}
+      <section class="glossary-group" aria-labelledby="letter-{{ .letter }}">
+        <h2 class="glossary-group__letter" id="letter-{{ .letter }}">{{ .letter }}</h2>
+        <dl class="glossary-list">
+          {{ range .items }}
+            {{ $t := . }}
+            {{ $used := index $uses $t.key }}
+            <div class="glossary-entry" id="{{ $t.key }}">
+              <dt class="glossary-entry__term"><a href="#{{ $t.key }}">{{ $t.title }}</a></dt>
+              <dd class="glossary-entry__text">{{ partial "blog/glossary-text.html" (dict "page" $page "text" $t.text) }}</dd>
+              {{ if or $used $t.link }}
+                <dd class="glossary-entry__meta">
+                  {{ with $used }}
+                    <span>{{ i18n "blog.glossary_used_in" }}:
+                      {{ range $i, $p := . }}{{ if $i }}, {{ end }}<a href="{{ $p.RelPermalink }}">{{ $p.LinkTitle }}</a>{{ end }}
+                    </span>
+                  {{ end }}
+                  {{ with $t.link }}
+                    <a class="glossary-entry__ext" href="{{ . }}" target="_blank" rel="noopener noreferrer">{{ $t.linkHost }}</a>
+                  {{ end }}
+                </dd>
+              {{ end }}
+            </div>
+          {{ end }}
+        </dl>
+      </section>
+    {{ end }}
+  </div>
+{{ end }}

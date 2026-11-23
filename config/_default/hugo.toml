@@ -1,0 +1,75 @@
+# -- Site configuration --
+# Theme docs: https://blowfish.page/docs/configuration/
+
+baseURL = "https://talhatabak.com/"
+theme = "blowfish"
+
+# English is the default language and lives at the site root ("/").
+# Turkish lives under "/tr/". Visitors whose browser prefers Turkish are
+# redirected client-side (see params.toml -> [languageRedirect]).
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false
+
+enableRobotsTXT = true
+enableEmoji = true
+# Keep tags exactly as written (no "Vpn" / "Dns" title-casing).
+titleCaseStyle = "none"
+summaryLength = 40
+
+buildDrafts = false
+buildFuture = false
+
+# Each build mirrors the site exactly: public/ is emptied first, except for
+# files from static/ and hidden folders such as .git, so deleted or renamed
+# posts and drafts never linger in the published output.
+cleanDestinationDir = true
+
+[pagination]
+  pagerSize = 50
+
+[imaging]
+  anchor = "Center"
+  [imaging.jpeg]
+    quality = 85
+  [imaging.webp]
+    quality = 85
+  # Hugo's default list minus the GPS exclusion, so that
+  # layouts/partials/blog/image-guard.html can detect photos that still
+  # contain a location. Processed images never carry metadata either way.
+  [imaging.meta]
+    fields = ['! *{Exif,Exposure[MPB],Contrast,Resolution,Sharp,JPEG,Metering,Sensing,Saturation,ColorSpace,Flash,WhiteBalance}*']
+
+# Categories are content sections (content/<category>/), not a taxonomy.
+# Tags are the only taxonomy.
+[taxonomies]
+  tag = "tags"
+
+[sitemap]
+  changefreq = "weekly"
+  filename = "sitemap.xml"
+  priority = 0.5
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  section = ["HTML", "RSS"]
+
+[services.rss]
+  limit = 30
+
+[related]
+  threshold = 0
+  toLower = false
+
+  [[related.indices]]
+    name = "tags"
+    weight = 100
+
+  [[related.indices]]
+    name = "date"
+    weight = 10
+
+  [[related.indices]]
+    applyFilter = false
+    name = "fragmentrefs"
+    type = "fragments"
+    weight = 10

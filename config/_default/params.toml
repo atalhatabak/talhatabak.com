@@ -1,0 +1,139 @@
+# -- Theme options --
+# Full reference: https://blowfish.page/docs/configuration/#theme-parameters
+# Only the options that differ from the Blowfish defaults are commented.
+
+# Custom scheme: assets/css/schemes/graphite.css
+colorScheme = "graphite"
+# Light by default, but follows the visitor's OS setting automatically.
+defaultAppearance = "light"
+autoSwitchAppearance = true
+
+enableA11y = false
+enableSearch = true
+enableCodeCopy = true
+enableStructuredBreadcrumbs = true
+
+replyByEmail = false
+
+# Every category section must be listed here, otherwise its posts won't
+# appear on the home page, in the archive or in the RSS feed.
+mainSections = ["self-hosting"]
+
+disableImageOptimization = false
+disableImageOptimizationMD = false
+disableTextInHeader = false
+hotlinkFeatureImage = false
+defaultSocialImage = "img/social-card.png"
+
+highlightCurrentMenuArea = true
+
+fingerprintAlgorithm = "sha512"
+
+giteaDefaultServer = "https://git.fsfe.org"
+forgejoDefaultServer = "https://codeberg.org"
+
+[languageRedirect]
+  enabled = true
+  storageKey = "blowfish_preferred_language"
+  # Overridden in layouts/partials/language-redirect.html:
+  # English (default language) pages redirect visitors whose browser
+  # prefers Turkish to the Turkish translation. Turkish pages are never
+  # redirected by browser language, so shared Turkish links stay Turkish.
+  # A language picked from the language menu is remembered and wins.
+  browserRedirectHomeOnly = true
+  storedLanguageRedirect = true
+
+[header]
+  layout = "basic"
+  mobileMenuStyle = "dropdown"
+
+[footer]
+  showMenu = true
+  showCopyright = true
+  showThemeAttribution = true
+  showAppearanceSwitcher = true
+  showScrollToTop = true
+
+[homepage]
+  # layouts/partials/home/custom.html
+  layout = "custom"
+  showRecent = false
+  # Number of posts in "Latest posts" on the home page.
+  showRecentItems = 6
+
+[article]
+  showDate = true
+  showViews = false
+  showLikes = false
+  showDateOnlyInArticle = false
+  showDateUpdated = true
+  showAuthor = true
+  showAuthorBottom = true
+  showHero = false
+  layoutBackgroundBlur = true
+  layoutBackgroundHeaderSpace = true
+  showBreadcrumbs = false
+  showDraftLabel = true
+  showEdit = false
+  # editURL = "https://github.com/your-username/your-repo/blob/main/content/"
+  editAppendPath = true
+  seriesOpened = false
+  showHeadingAnchors = true
+  showPagination = true
+  invertPagination = false
+  showReadingTime = true
+  showReadingProgress = true
+  showTableOfContents = true
+  showRelatedContent = false
+  showTaxonomies = true
+  showCategories = false
+  showTags = true
+  showAuthorsBadges = false
+  showWordCount = false
+  showZenMode = false
+  externalLinkForceNewTab = true
+
+[list]
+  showHero = false
+  layoutBackgroundBlur = true
+  layoutBackgroundHeaderSpace = true
+  showBreadcrumbs = false
+  showSummary = true
+  showViews = false
+  showLikes = false
+  showTableOfContents = false
+  showCards = false
+  orderByWeight = false
+  groupByYear = true
+  cardView = false
+  cardViewScreenWidth = false
+  constrainItemsWidth = false
+
+[sitemap]
+  excludedKinds = ["taxonomy", "term"]
+
+[taxonomy]
+  showTermCount = true
+  showHero = false
+  layoutBackgroundBlur = true
+  layoutBackgroundHeaderSpace = true
+  showBreadcrumbs = false
+  showViews = false
+  showLikes = false
+  showTableOfContents = false
+  cardView = false
+
+[term]
+  showHero = false
+  layoutBackgroundBlur = true
+  layoutBackgroundHeaderSpace = true
+  showBreadcrumbs = false
+  showViews = false
+  showLikes = false
+  showTableOfContents = false
+  groupByYear = true
+  cardView = false
+  cardViewScreenWidth = false
+
+# Analytics, comments, verification etc. are intentionally not configured.
+# See themes/blowfish/config/_default/params.toml for all available keys.

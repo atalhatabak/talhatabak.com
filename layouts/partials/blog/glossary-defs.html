@@ -1,0 +1,22 @@
+{{- /*
+  The explanations of the glossary terms used on this page, hidden. Screen
+  readers read them through aria-describedby; assets/js/blog.js shows them in
+  a card on hover, keyboard focus or tap.
+  Call it after .Content: the link hook (render-link.html) records the terms
+  while the content is rendered. Context: the page.
+*/ -}}
+{{- $page := . -}}
+{{- with .Store.Get "glossaryTerms" }}
+  <div class="term-defs" hidden data-more="{{ i18n "blog.glossary_open" }}">
+    {{- range $key, $_ := . -}}
+      {{- with partial "blog/glossary-term.html" (dict "key" $key "page" $page) }}
+        <div id="term-def-{{ .key }}" data-title="{{ .title }}"
+          {{- with .href }} data-href="{{ . }}"{{ end }}
+          {{- with .link }} data-link="{{ . }}"{{ end }}
+          {{- with .linkHost }} data-link-host="{{ . }}"{{ end }}>
+          {{- partial "blog/glossary-text.html" (dict "page" $page "text" .text) -}}
+        </div>
+      {{- end -}}
+    {{- end }}
+  </div>
+{{- end -}}

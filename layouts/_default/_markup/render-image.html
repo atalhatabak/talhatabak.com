@@ -1,0 +1,73 @@
+{{- /*
+  Site override of the theme's image hook
+  (themes/blowfish/layouts/_default/_markup/render-image.html). Differences:
+  - Photos are turned upright by their EXIF orientation, so portrait phone
+    photos no longer show up sideways.
+  - The article and the zoom view only use processed copies (up to 1280 px in
+    the article, 2400 px when zoomed), which carry no camera metadata.
+  - `sizes` matches this site's 42rem reading column.
+  - Portrait images stay within the viewport height (custom.css, --img-ratio).
+  - A relative image path that matches no file prints a warning.
+  Images that still contain GPS data stop the build: partials/blog/image-guard.html.
+*/ -}}
+{{- $url := urls.Parse .Destination -}}
+{{- $alt := .PlainText -}}
+{{- $res := "" -}}
+{{- if not $url.Scheme -}}
+  {{- $res = or (.Page.Resources.Get $url.Path) (resources.Get (strings.TrimPrefix "/" $url.Path)) -}}
+  {{- if and (not $res) (not (strings.HasPrefix $url.Path "/")) -}}
+    {{- warnf "Image not found in %q: %q (put the file in the post's folder)" .Page.Path .Destination -}}
+  {{- end -}}
+{{- end -}}
+{{- $isRaster := false -}}
+{{- with $res -}}
+  {{- $isRaster = and (eq .MediaType.MainType "image") (not (in (slice "svg" "svg+xml" "gif") .MediaType.SubType)) -}}
+{{- end -}}
+
+<figure
+  {{- range $k, $v := .Attributes -}}
+    {{- if $v -}}
+      {{- printf " %s=%q" $k ($v | transform.HTMLEscape) | safeHTMLAttr -}}
+    {{- end -}}
+  {{- end -}}>
+  {{- if and $isRaster (not site.Params.disableImageOptimizationMD) -}}
+    {{- $img := $res -}}
+    {{- with $res.Meta -}}
+      {{- if gt .Orientation 1 -}}
+        {{- $img = $res | images.Filter images.AutoOrient -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $w := $img.Width -}}
+    {{- $small := $img.Resize (printf "%dx" (math.Min $w 800 | int)) -}}
+    {{- $zoom := $img.Fit "2400x2400" }}
+    <img
+      class="my-0 rounded-md"
+      loading="lazy"
+      decoding="async"
+      alt="{{ $alt }}"
+      width="{{ $img.Width }}"
+      height="{{ $img.Height }}"
+      style="--img-ratio: {{ div (float $img.Width) $img.Height | lang.FormatNumberCustom 4 }}"
+      src="{{ $small.RelPermalink }}"
+      {{- if gt $w 800 -}}
+        {{- $large := $img.Resize (printf "%dx" (math.Min $w 1280 | int)) }}
+      srcset="{{ $small.RelPermalink }} {{ $small.Width }}w, {{ $large.RelPermalink }} {{ $large.Width }}w"
+      sizes="(min-width: 768px) 42rem, calc(100vw - 2.5rem)"
+      {{- end }}
+      data-zoom-src="{{ $zoom.RelPermalink }}">
+  {{- else if $res -}}
+    {{/* SVG, GIF (kept as is so animations survive), or optimisation disabled */}}
+    <img
+      class="my-0 rounded-md"
+      loading="lazy"
+      decoding="async"
+      alt="{{ $alt }}"
+      src="{{ $res.RelPermalink }}"
+      {{- if $isRaster }} width="{{ $res.Width }}" height="{{ $res.Height }}"{{ end }}>
+  {{- else -}}
+    <img class="my-0 rounded-md" loading="lazy" decoding="async" alt="{{ $alt }}" src="{{ .Destination | safeURL }}">
+  {{- end -}}
+  {{- with .Title -}}
+    <figcaption>{{ . | markdownify }}</figcaption>
+  {{- end -}}
+</figure>

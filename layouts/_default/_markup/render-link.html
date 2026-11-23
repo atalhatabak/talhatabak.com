@@ -1,0 +1,71 @@
+{{- /*
+  Links (overrides the theme hook; based on Hugo's embedded hook).
+
+  Internal links are resolved to real pages, in the current language:
+    [text](#heading)                          same page
+    [text](/self-hosting/mail-server)         another post
+    [text](/self-hosting/mail-server#dkim)    a heading in another post
+    [text](../mail-server/index.md#dkim)      relative paths and .md work too
+  A link to a page that doesn't exist prints a warning during the build.
+  External links open in a new tab (article.externalLinkForceNewTab).
+
+  Glossary terms, defined in data/glossary.yaml:
+    [SELinux](term:selinux)                   explained in a card on hover / tap
+  The term is recorded on the page so blog/glossary-defs.html can add its
+  explanation after the content. An unknown term prints a warning and is
+  rendered as plain text.
+*/ -}}
+{{- $u := urls.Parse .Destination -}}
+
+{{- if eq $u.Scheme "term" -}}
+  {{- $key := $u.Opaque | default $u.Host -}}
+  {{- with partial "blog/glossary-term.html" (dict "key" $key "page" $.Page) -}}
+    {{- $term := . -}}
+    {{- $.Page.Store.SetInMap "glossaryTerms" $term.key true -}}
+    <a class="term" data-term="{{ $term.key }}"
+      {{- with $term.href }} href="{{ . }}"{{ else }} tabindex="0"{{ end }} aria-describedby="term-def-{{ $term.key }}">
+      {{- with $.Text }}{{ . | safeHTML }}{{ else }}{{ $term.title }}{{ end -}}
+    </a>
+  {{- else -}}
+    {{- warnf "Unknown glossary term in %q: %q (define it in data/glossary.yaml)" $.Page.Path $.Destination -}}
+    {{- $.Text | safeHTML -}}
+  {{- end -}}
+
+{{- else -}}
+  {{- $href := $u.String -}}
+  {{- $isExternal := or (eq $u.Scheme "http") (eq $u.Scheme "https") -}}
+  {{- if strings.HasPrefix $u.String "#" -}}
+    {{- $href = printf "%s#%s" .PageInner.RelPermalink $u.Fragment -}}
+  {{- else if and $href (not $u.IsAbs) -}}
+    {{- $path := strings.TrimPrefix "./" $u.Path -}}
+    {{- with or
+      ($.PageInner.GetPage $path)
+      ($.PageInner.Resources.Get $path)
+      (resources.Get $path)
+    -}}
+      {{- $href = .RelPermalink -}}
+      {{- with $u.RawQuery -}}
+        {{- $href = printf "%s?%s" $href . -}}
+      {{- end -}}
+      {{- with $u.Fragment -}}
+        {{- $href = printf "%s#%s" $href . -}}
+      {{- end -}}
+    {{- else -}}
+      {{- $static := path.Join "static" $u.Path -}}
+      {{- if and $u.Path (not (os.FileExists $static)) (not (strings.HasSuffix $u.Path ".xml")) -}}
+        {{- warnf "Broken link in %q: %q does not match any page or file" $.Page.Path .Destination -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $forceNewTab := .Page.Params.externalLinkForceNewTab | default (site.Params.article.externalLinkForceNewTab | default true) -}}
+  {{- $newTab := and $forceNewTab $isExternal -}}
+
+  <a href="{{ $href }}"
+    {{- with .Title }} title="{{ . }}"{{ end }}
+    {{- if $isExternal }} class="link-external"{{ end }}
+    {{- if $newTab }} target="_blank" rel="noopener noreferrer"{{ end }}>
+    {{- .Text | safeHTML -}}
+  </a>
+{{- end -}}
+{{- /* Trim EOF */ -}}

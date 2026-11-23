@@ -1,0 +1,68 @@
+{{- /*
+  Renders a series as a nested, ordered tree.
+
+  Params (dict):
+    items   – slice from blog/chapters.html
+    current – the page being read (optional, highlighted)
+    variant – "compact" (article sidebar) or "full" (category page)
+*/ -}}
+{{- $items := .items -}}
+{{- $full := eq .variant "full" -}}
+{{- $currentURL := "" -}}
+{{- $currentChapter := "" -}}
+{{- with .current -}}
+  {{- $currentURL = .RelPermalink -}}
+  {{- $currentChapter = string .Params.chapter -}}
+{{- end -}}
+
+{{- $base := 99 -}}
+{{- range $items -}}
+  {{- if lt .depth $base -}}{{- $base = .depth -}}{{- end -}}
+{{- end -}}
+
+{{- with $items -}}
+<ol class="chapter-tree chapter-tree--{{ cond $full "full" "compact" }}" role="list">
+  {{- $depth := $base -}}
+  {{- range $i, $it := $items -}}
+    {{- $d := $it.depth -}}
+    {{- if gt $i 0 -}}
+      {{- if gt $d $depth -}}
+        {{- range seq (sub $d $depth) -}}<ol class="chapter-tree__sub" role="list">{{- end -}}
+      {{- else -}}
+        </li>
+        {{- if gt $depth $d -}}
+          {{- range seq (sub $depth $d) -}}</ol></li>{{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $depth = $d -}}
+    {{- $p := $it.page -}}
+    {{- $isCurrent := eq $p.RelPermalink $currentURL -}}
+    {{- $isAncestor := and $currentChapter (hasPrefix $currentChapter (printf "%s." $it.chapter)) -}}
+    <li class="chapter-tree__item{{ if $isCurrent }} is-current{{ end }}{{ if $isAncestor }} is-ancestor{{ end }}{{ if $p.Draft }} is-draft{{ end }}">
+      <a class="chapter-tree__link" href="{{ $p.RelPermalink }}"{{ if $isCurrent }} aria-current="page"{{ end }}>
+        <span class="chapter-tree__num">{{ $it.chapter }}</span>
+        {{- if $full }}
+          <span class="chapter-tree__body">
+            <span class="chapter-tree__title">
+              {{- $p.LinkTitle | emojify -}}
+              {{- if $p.Draft }} <span class="chip chip--draft">{{ i18n "article.draft" }}</span>{{ end -}}
+            </span>
+            {{- with $p.Description }}
+              <span class="chapter-tree__desc">{{ . | markdownify | plainify }}</span>
+            {{- end }}
+          </span>
+          {{- if ne $p.ReadingTime 0 }}
+            <span class="chapter-tree__meta">{{ i18n "blog.min_read" $p.ReadingTime }}</span>
+          {{- end }}
+        {{- else }}
+          <span class="chapter-tree__title">{{ $p.LinkTitle | emojify }}</span>
+        {{- end }}
+      </a>
+  {{- end -}}
+  </li>
+  {{- if gt $depth $base -}}
+    {{- range seq (sub $depth $base) -}}</ol></li>{{- end -}}
+  {{- end -}}
+</ol>
+{{- end -}}

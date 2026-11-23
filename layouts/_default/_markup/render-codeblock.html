@@ -1,0 +1,24 @@
+{{- /*
+  Code blocks (overrides the theme hook to add a header bar).
+
+  The header shows the file name (```nginx {title="/etc/nginx/nginx.conf"})
+  and the language. The copy button (params.toml -> enableCodeCopy) is
+  added by the theme's JavaScript to every .highlight-wrapper.
+  Blocks without a language and without a title get no header.
+*/ -}}
+{{- $title := .Attributes.title | default "" -}}
+{{- $lang := .Type | default "text" -}}
+{{- $showLang := not (in (slice "text" "plaintext" "txt" "") $lang) -}}
+<div class="highlight-wrapper{{ if or $title $showLang }} has-header{{ end }}" data-lang="{{ $lang }}">
+  {{- if or $title $showLang -}}
+    <div class="codeblock-title">
+      {{- with $title -}}
+        <span class="codeblock-title__file">{{ . }}</span>
+      {{- end -}}
+      {{- if $showLang -}}
+        <span class="codeblock-title__lang">{{ $lang }}</span>
+      {{- end -}}
+    </div>
+  {{- end -}}
+  {{- transform.Highlight .Inner $lang .Options -}}
+</div>

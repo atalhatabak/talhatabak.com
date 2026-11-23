@@ -1,0 +1,58 @@
+# -- Main menu (header) --
+# "Series" is a dropdown. When you create a new category (content/<category>/),
+# add it below with parent = "series".
+
+[[main]]
+  identifier = "series"
+  name = "Series"
+  url = "/#home-categories"  # the categories on the home page
+  weight = 10
+
+[[main]]
+  name = "Self Hosting"
+  pageRef = "self-hosting"
+  parent = "series"
+  weight = 10
+
+[[main]]
+  name = "Posts"
+  pageRef = "posts"
+  weight = 20
+
+[[main]]
+  name = "About"
+  pageRef = "about"
+  weight = 30
+
+# -- Footer menu --
+
+[[footer]]
+  name = "About"
+  pageRef = "about"
+  weight = 10
+
+[[footer]]
+  name = "Posts"
+  pageRef = "posts"
+  weight = 20
+
+[[footer]]
+  name = "Tags"
+  pageRef = "tags"
+  weight = 30
+
+[[footer]]
+  name = "RSS"
+  url = "/index.xml"
+  weight = 40
+
+[[footer]]
+  name = "Glossary"
+  pageRef = "glossary"
+  weight = 25
+
+# Repository; its README credits the third-party assets (home background, CC BY-SA).
+[[footer]]
+  name = "Source code"
+  url = "https://github.com/atalhatabak/talhatabak.com#credits"
+  weight = 50

@@ -1,0 +1,58 @@
+{{- /*
+  Previous / next navigation at the end of a post.
+
+  Posts in a series follow the series (chapter) order. Other posts fall
+  back to their category, ordered by date (older = previous).
+
+  Params (dict): page, series (from blog/series.html)
+*/ -}}
+{{- $page := .page -}}
+{{- $series := .series -}}
+{{- $show := $page.Params.showPagination | default (site.Params.article.showPagination | default true) -}}
+{{- if $show -}}
+  {{- $prev := false -}}
+  {{- $next := false -}}
+  {{- $prevChapter := "" -}}
+  {{- $nextChapter := "" -}}
+  {{- if $series.current -}}
+    {{- with $series.prev }}{{ $prev = .page }}{{ $prevChapter = .chapter }}{{ end -}}
+    {{- with $series.next }}{{ $next = .page }}{{ $nextChapter = .chapter }}{{ end -}}
+  {{- else if $page.CurrentSection -}}
+    {{- if not $page.CurrentSection.IsHome -}}
+      {{- $pages := $page.CurrentSection.RegularPages -}}
+      {{- $siblings := (union (where $pages "Params.chapter" "==" nil) (where $pages "Params.chapter" "==" "")).ByDate -}}
+      {{- $prev = $siblings.Prev $page -}}
+      {{- $next = $siblings.Next $page -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if or $prev $next -}}
+    <nav class="post-pager print:hidden" aria-label="{{ i18n "blog.post_navigation" }}">
+      {{- with $prev }}
+        <a class="post-pager__link post-pager__link--prev" href="{{ .RelPermalink }}" rel="prev">
+          <span class="post-pager__dir"><span aria-hidden="true">&larr;</span> {{ i18n "blog.previous" }}</span>
+          <span class="post-pager__title">
+            {{- with $prevChapter }}<span class="post-pager__num">{{ . }}</span>{{ end -}}
+            {{- .Title | emojify -}}
+          </span>
+        </a>
+      {{- else }}
+        <span class="post-pager__spacer" aria-hidden="true"></span>
+      {{- end }}
+      {{- with $next }}
+        <a class="post-pager__link post-pager__link--next" href="{{ .RelPermalink }}" rel="next">
+          <span class="post-pager__dir">{{ i18n "blog.next" }} <span aria-hidden="true">&rarr;</span></span>
+          <span class="post-pager__title">
+            {{- with $nextChapter }}<span class="post-pager__num">{{ . }}</span>{{ end -}}
+            {{- .Title | emojify -}}
+          </span>
+        </a>
+      {{- end }}
+    </nav>
+  {{- end -}}
+  {{- with $series.section }}
+    <p class="post-pager__map">
+      <a href="{{ .RelPermalink }}">{{ partial "blog/icon.html" "map" }}<span>{{ i18n "blog.back_to_map" (dict "Series" .Title) }}</span></a>
+    </p>
+  {{- end }}
+{{- end -}}

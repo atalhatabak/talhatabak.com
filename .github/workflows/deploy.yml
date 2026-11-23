@@ -1,0 +1,57 @@
+# Builds the site and copies it to the server on every push to main.
+# The server's SSH is only reachable over WireGuard, so the runner joins the
+# VPN first. Skipped until the repository variable DEPLOY_TARGET is set;
+# one-time setup: tools/deploy/README.md.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+env:
+  HUGO_VERSION: "0.170.1"
+
+jobs:
+  deploy:
+    if: vars.DEPLOY_TARGET != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      - name: Install Hugo and WireGuard
+        run: |
+          curl -fsSL "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz" \
+            | sudo tar -xz -C /usr/local/bin hugo
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq wireguard-tools
+          hugo version
+
+      - name: Connect to the VPN
+        env:
+          WG_CONFIG: ${{ secrets.WG_CONFIG }}
+        run: |
+          printf '%s\n' "$WG_CONFIG" | sudo install -m 600 /dev/stdin /etc/wireguard/wg0.conf
+          sudo wg-quick up wg0
+
+      - name: Build and deploy
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          DEPLOY_TARGET: ${{ vars.DEPLOY_TARGET }}
+        run: |
+          install -d -m 700 ~/.ssh
+          (umask 077 && printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key)
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          export RSYNC_RSH="ssh -i $HOME/.ssh/deploy_key -o IdentitiesOnly=yes -o ConnectTimeout=30"
+          tools/deploy/deploy.sh "$DEPLOY_TARGET"

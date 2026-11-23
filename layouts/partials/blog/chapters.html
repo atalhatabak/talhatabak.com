@@ -1,0 +1,32 @@
+{{- /*
+  Returns the chaptered posts of a category section in reading order.
+
+  A post joins its category's series map by setting `chapter` in its
+  front matter: "0", "1", "2", "2.1", "2.2", "10" ... The number of dot
+  separated parts is the depth ("2.1" is a sub-part of "2"). Numeric
+  parts are compared as numbers, so "10" comes after "9.2". Non-numeric
+  parts (e.g. "A") are sorted after all numbers, which is handy for
+  appendices.
+
+  Context: a section page.
+  Returns: a slice of dicts { page, chapter, depth, key } sorted by key.
+*/ -}}
+{{- $items := slice -}}
+{{- range $p := .RegularPages -}}
+  {{- with $p.Params.chapter -}}
+    {{- $chapter := trim (string .) " " -}}
+    {{- $parts := split $chapter "." -}}
+    {{- $keyParts := slice -}}
+    {{- range $parts -}}
+      {{- if findRE `^\d+$` . -}}
+        {{- $n := strings.TrimLeft "0" . | default "0" -}}
+        {{- $pad := strings.Repeat (sub 6 (len $n) | math.Max 0 | int) "0" -}}
+        {{- $keyParts = $keyParts | append (printf "%s%s" $pad $n) -}}
+      {{- else -}}
+        {{- $keyParts = $keyParts | append (printf "~%s" .) -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $items = $items | append (dict "page" $p "chapter" $chapter "depth" (len $parts) "key" (delimit $keyParts ".")) -}}
+  {{- end -}}
+{{- end -}}
+{{- return sort $items "key" -}}

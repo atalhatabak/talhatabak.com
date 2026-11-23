@@ -1,0 +1,10 @@
+{{- /* Per-page head additions. (Mermaid is loaded by blog/mermaid-loader.html.) */ -}}
+{{- $alg := site.Params.fingerprintAlgorithm | default "sha512" -}}
+{{- with resources.Get "js/blog.js" | resources.Minify | resources.Fingerprint $alg }}
+  <script defer src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
+{{- end }}
+{{- /* Refuse to publish images that still contain GPS coordinates. */ -}}
+{{- with .File -}}
+  {{- partial "blog/image-guard.html" (dict "images" ($.Resources.ByType "image") "dir" (path.Join "content" .Dir)) -}}
+{{- end -}}
+{{- partialCached "blog/image-guard.html" (dict "images" (resources.Match "img/**") "dir" "assets") "assets" -}}

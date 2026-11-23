@@ -1,0 +1,51 @@
+# Strings used by this site's own templates (layouts/partials/blog/...).
+# Theme strings live in themes/blowfish/i18n/en.yaml.
+
+blog:
+  series: "Series"
+  category: "Category"
+  part: "Part {{ .Chapter }}"
+  position: "Part {{ .Position }} of {{ .Total }}"
+  series_map: "Series map"
+  the_map: "Series map"
+  on_this_page: "On this page"
+  previous: "Previous"
+  next: "Next"
+  post_navigation: "Post navigation"
+  back_to_map: "All parts of {{ .Series }}"
+  start_reading: "Start reading"
+  view_map: "Series map"
+  browse: "Browse posts"
+  min_read:
+    one: "{{ .Count }} min read"
+    other: "{{ .Count }} min read"
+  total_reading:
+    one: "{{ .Count }} min of reading"
+    other: "{{ .Count }} min of reading"
+  parts:
+    one: "{{ .Count }} part"
+    other: "{{ .Count }} parts"
+  subparts:
+    one: "{{ .Count }} sub-part"
+    other: "{{ .Count }} sub-parts"
+  posts:
+    one: "{{ .Count }} post"
+    other: "{{ .Count }} posts"
+  and_more:
+    one: "and {{ .Count }} more part"
+    other: "and {{ .Count }} more parts"
+  updated: "Updated {{ .Date }}"
+  posts_title: "Posts"
+  other_posts: "Other posts in this category"
+  latest_posts: "Latest posts"
+  all_posts: "All posts"
+  series_and_categories: "Series & categories"
+  more_about_me: "More about me"
+  archive: "Archive"
+  glossary: "Glossary"
+  glossary_open: "Open in glossary"
+  glossary_used_in: "Used in"
+  glossary_letters: "Jump to letter"
+  glossary_terms:
+    one: "{{ .Count }} term"
+    other: "{{ .Count }} terms"

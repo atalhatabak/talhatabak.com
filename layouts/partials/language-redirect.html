@@ -1,0 +1,62 @@
+{{- /*
+  Overrides themes/blowfish/layouts/partials/language-redirect.html
+  (the theme's JavaScript, assets/js/language-redirect.js, is reused).
+
+  Only one thing changes: which pages may redirect by browser language.
+  The theme allows either "home page only" or "every page". Here it is
+  "every page of the default language":
+
+    - An English page opened by a browser that prefers Turkish redirects
+      to the Turkish translation (if there is one).
+    - A Turkish page is never redirected by browser language, so a Turkish
+      link shared with someone using an English browser stays Turkish.
+    - A language chosen from the language menu is stored and always wins
+      (storedLanguageRedirect), in both directions.
+
+  To get the theme's original behaviour back, delete this file.
+*/ -}}
+{{ $params := site.Params.languageRedirect | default dict }}
+{{ if and ($params.enabled | default false) hugo.IsMultilingual }}
+  {{ $translations := slice }}
+  {{ range .AllTranslations }}
+    {{ $translations = $translations | append (dict "lang" .Language.Lang "languageCode" (.Language.Locale | default "") "url" .RelPermalink) }}
+  {{ end }}
+
+  {{ $storedLanguageRedirect := true }}
+  {{ if isset $params "storedlanguageredirect" }}
+    {{ $storedLanguageRedirect = $params.storedLanguageRedirect }}
+  {{ end }}
+
+  {{ $defaultLanguage := hugo.Sites.Default.Language.Lang }}
+  {{ $fallbackLanguage := $defaultLanguage }}
+  {{ with $params.fallbackLanguage }}
+    {{ $fallbackLanguage = . }}
+  {{ end }}
+
+  {{/* The theme script redirects by browser language only when
+    browserRedirectHomeOnly is false or isHome is true. */}}
+  {{ $browserRedirectAllowed := eq .Language.Lang $defaultLanguage }}
+
+  {{ $config := dict
+    "enabled" true
+    "storageKey" ($params.storageKey | default "blowfish_preferred_language")
+    "fallbackLanguage" $fallbackLanguage
+    "browserRedirectHomeOnly" true
+    "storedLanguageRedirect" $storedLanguageRedirect
+    "currentLanguage" .Language.Lang
+    "currentLanguageCode" (.Language.Locale | default "")
+    "isHome" $browserRedirectAllowed
+    "translations" $translations
+  }}
+  <script>
+    window.BlowfishLanguageRedirectConfig = {{ $config | jsonify | safeJS }};
+  </script>
+  {{ $alg := site.Params.fingerprintAlgorithm | default "sha512" }}
+  {{ with resources.Get "js/language-redirect.js" }}
+    {{ $jsLanguageRedirect := . | resources.Minify | resources.Fingerprint $alg }}
+    <script
+      type="text/javascript"
+      src="{{ $jsLanguageRedirect.RelPermalink }}"
+      integrity="{{ $jsLanguageRedirect.Data.Integrity }}"></script>
+  {{ end }}
+{{ end }}

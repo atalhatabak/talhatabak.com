@@ -1,0 +1,44 @@
+{{- /*
+  Series context for a single post.
+
+  Context: a regular page.
+  Returns: dict (empty when the page is not part of a series)
+    section  – the category section page
+    items    – all chaptered posts of the section (see chapters.html)
+    current  – the item of this page
+    position – 1-based position of this page in the series
+    total    – number of posts in the series
+    prev     – previous item in reading order (or false)
+    next     – next item in reading order (or false)
+*/ -}}
+{{- $result := dict -}}
+{{- $section := .CurrentSection -}}
+{{- if and .IsPage .Params.chapter $section (not $section.IsHome) -}}
+  {{- $items := partialCached "blog/chapters.html" $section $section.RelPermalink -}}
+  {{- $index := -1 -}}
+  {{- range $i, $it := $items -}}
+    {{- if eq $it.page.RelPermalink $.RelPermalink -}}
+      {{- $index = $i -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if ge $index 0 -}}
+    {{- $prev := false -}}
+    {{- if gt $index 0 -}}
+      {{- $prev = index $items (sub $index 1) -}}
+    {{- end -}}
+    {{- $next := false -}}
+    {{- if lt (add $index 1) (len $items) -}}
+      {{- $next = index $items (add $index 1) -}}
+    {{- end -}}
+    {{- $result = dict
+      "section" $section
+      "items" $items
+      "current" (index $items $index)
+      "position" (add $index 1)
+      "total" (len $items)
+      "prev" $prev
+      "next" $next
+    -}}
+  {{- end -}}
+{{- end -}}
+{{- return $result -}}

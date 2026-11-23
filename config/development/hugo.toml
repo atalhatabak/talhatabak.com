@@ -1,0 +1,7 @@
+# Overrides for `hugo server` (Hugo's "development" environment),
+# merged on top of config/_default/.
+
+# The server writes its preview to disk. Keep it out of public/, the folder
+# that gets published, so drafts, localhost links and the live-reload script
+# can never end up on the live site.
+publishDir = "public-dev"

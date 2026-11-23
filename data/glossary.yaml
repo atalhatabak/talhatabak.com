@@ -1,0 +1,437 @@
+# Glossary: terms explained in a small card when a reader hovers over or taps
+# them. Define a term once here, then link it from any post:
+#
+#   [SELinux](term:selinux)       the link text is shown as written,
+#   [SELinux'un](term:selinux)    so Turkish suffixes work;
+#   [](term:selinux)              empty text shows the term's title.
+#
+# Every term is also listed on the glossary page (/glossary/, /tr/glossary/).
+#
+# key (lowercase, words joined with "-"):
+#   title:  the term's name: a string, or {en: ..., tr: ...} when it differs
+#   en, tr: the explanation in one or two sentences. Inline Markdown works:
+#           `code`, **bold**, links, and other terms: [SPF](term:spf)
+#   link:   optional page for further reading, shown as "domain ↗"
+#           (a string, or {en: ..., tr: ...})
+
+container:
+  title: { en: "Container", tr: "Konteyner" }
+  en: "A process that runs with its own isolated filesystem, network and resource limits while sharing the host's kernel. Lighter than a virtual machine; Docker creates containers from images."
+  tr: "Ana makinenin çekirdeğini paylaşan ama kendi yalıtılmış dosya sistemi, ağı ve kaynak sınırları olan bir süreç. Sanal makineden hafiftir; Docker konteynerleri imajlardan oluşturur."
+
+dkim:
+  title: "DKIM"
+  en: "DomainKeys Identified Mail: the sending server signs every message with a private key, and receivers verify the signature with the public key published in DNS. It proves that a message really comes from the domain and wasn't altered."
+  tr: "DomainKeys Identified Mail: gönderen sunucu her mesajı özel bir anahtarla imzalar, alıcılar da imzayı DNS'te yayımlanan açık anahtarla doğrular. Mesajın gerçekten o alan adından geldiğini ve değiştirilmediğini kanıtlar."
+
+dmarc:
+  title: "DMARC"
+  en: "A DNS policy that tells receiving servers what to do with mail that fails the [SPF](term:spf) and [DKIM](term:dkim) checks (nothing, quarantine or reject), and where to send reports."
+  tr: "[SPF](term:spf) ve [DKIM](term:dkim) kontrollerinden geçemeyen maillere alıcı sunucuların ne yapacağını (hiçbir şey, karantina ya da ret) ve raporların nereye gönderileceğini söyleyen DNS politikası."
+
+lets-encrypt:
+  title: "Let's Encrypt"
+  en: "A free, automated certificate authority. Its certificates are short-lived, so a client such as Certbot renews them automatically."
+  tr: "Ücretsiz ve otomatik çalışan bir sertifika otoritesi. Sertifikaları kısa ömürlüdür; bu yüzden Certbot gibi bir istemci onları kendiliğinden yeniler."
+  link: "https://letsencrypt.org/"
+
+mx-record:
+  title: { en: "MX record", tr: "MX kaydı" }
+  en: "The DNS record that tells other mail servers where to deliver mail for a domain. `10 mail.example.com.` means: deliver to mail.example.com, priority 10 (the lowest number wins)."
+  tr: "Bir alan adına gelen maillerin hangi sunucuya teslim edileceğini söyleyen DNS kaydı. `10 mail.example.com.` şu demek: mail.example.com'a teslim et, öncelik 10 (en küçük sayı kazanır)."
+
+reverse-proxy:
+  title: "Reverse proxy"
+  en: "A server that receives requests from the internet and passes them on to the services behind it, usually terminating [TLS](term:tls) on the way. In this series, NGINX does this for every site and container."
+  tr: "İnternetten gelen istekleri karşılayıp arkasındaki servislere ileten sunucu; [TLS](term:tls) bağlantısını da genellikle o sonlandırır. Bu seride bu işi her site ve konteyner için NGINX yapıyor."
+
+ptr-record:
+  title: { en: "PTR record", tr: "PTR kaydı" }
+  en: "Reverse DNS: the record that maps an IP address back to a name. Receiving mail servers check that the sending server's IP address has a PTR record that matches the server's name (for example `mail.example.com`). It is set in the VPS provider's panel, not at the domain's DNS provider."
+  tr: "Ters DNS (reverse DNS): bir IP adresinin hangi ada karşılık geldiğini gösteren kayıt. Mail alan sunucular, gönderen sunucunun IP adresinin PTR kaydının sunucunun adıyla (ör. `mail.example.com`) eşleşip eşleşmediğine bakar. Alan adının DNS sağlayıcısında değil, VPS sağlayıcısının panelinde ayarlanır."
+
+selinux:
+  title: "SELinux"
+  en: "Security-Enhanced Linux: a kernel security layer that decides what each process may access (files, ports, other processes) on top of normal file permissions. Enabled by default on RHEL-based systems such as Rocky Linux."
+  tr: "Security-Enhanced Linux: normal dosya izinlerinin üstüne, her sürecin nelere (dosyalar, portlar, diğer süreçler) erişebileceğine karar veren bir çekirdek güvenlik katmanı. Rocky Linux gibi RHEL tabanlı sistemlerde varsayılan olarak açıktır."
+  link: "https://en.wikipedia.org/wiki/Security-Enhanced_Linux"
+
+spf:
+  title: "SPF"
+  en: "Sender Policy Framework: a DNS TXT record that lists which servers may send mail for a domain. `v=spf1 mx -all` allows only the domain's mail servers and rejects everyone else."
+  tr: "Sender Policy Framework: bir alan adı adına hangi sunucuların mail gönderebileceğini listeleyen DNS TXT kaydı. `v=spf1 mx -all` yalnızca alan adının mail sunucularına izin verir, diğer herkesi reddeder."
+
+systemd:
+  title: "systemd"
+  en: "The service manager of most Linux distributions. It starts services at boot, restarts them when they fail and collects their logs (`journalctl`). A *drop-in* file adds settings to a service without editing its unit file."
+  tr: "Çoğu Linux dağıtımının servis yöneticisi. Servisleri açılışta başlatır, çökerlerse yeniden başlatır ve loglarını toplar (`journalctl`). Bir *drop-in* (ek) dosyası, servisin unit dosyasına dokunmadan ona ayar ekler."
+  link: "https://systemd.io/"
+
+tls:
+  title: "TLS"
+  en: "Transport Layer Security: the encryption behind `https://` and secure mail connections. The server proves who it is with a certificate, for example one from [Let's Encrypt](term:lets-encrypt)."
+  tr: "Transport Layer Security: `https://` ve güvenli mail bağlantılarının arkasındaki şifreleme. Sunucu kim olduğunu bir sertifikayla kanıtlar; örneğin [Let's Encrypt'ten](term:lets-encrypt) alınmış bir sertifikayla."
+  link:
+    en: "https://en.wikipedia.org/wiki/Transport_Layer_Security"
+    tr: "https://tr.wikipedia.org/wiki/Transport_Layer_Security"
+
+# -- Terms used in the Self Hosting series --
+
+2fa:
+  title: "2FA"
+  en: "Two-factor authentication: after the password, a second thing you have is needed too, usually a six-digit code from an authenticator app on your phone."
+  tr: "İki aşamalı doğrulama: paroladan sonra sahip olunan ikinci bir şey de gerekir; genellikle telefondaki bir authenticator uygulamasının ürettiği altı haneli kod."
+
+acme:
+  title: "ACME"
+  en: "The protocol [Let's Encrypt](term:lets-encrypt) uses to check that you control a domain before it gives you a certificate. The two common checks are [HTTP-01](term:http-01) and [DNS-01](term:dns-01)."
+  tr: "[Let's Encrypt'in](term:lets-encrypt) sertifika vermeden önce alan adının gerçekten sertifikayı isteyenin kontrolünde olduğunu doğrulamak için kullandığı protokol. En yaygın iki doğrulama yöntemi [HTTP-01](term:http-01) ve [DNS-01](term:dns-01)."
+
+amavis:
+  title: "Amavis"
+  en: "A content filter between [Postfix](term:postfix) and the mailboxes. It checks mail for spam and viruses, and in iRedMail it also signs outgoing mail with [DKIM](term:dkim)."
+  tr: "[Postfix](term:postfix) ile posta kutuları arasında çalışan içerik filtresi. Mailleri spam ve virüse karşı tarar; iRedMail'de giden mailleri [DKIM](term:dkim) ile imzalayan da odur."
+
+audit-log:
+  title: "Audit log"
+  en: "A record of every request to a service: who did what, and when. Vault writes secret values to this log as hashes, never in plain text."
+  tr: "Bir servise yapılan her isteğin kaydı: kim, neyi, ne zaman yaptı. Vault bu loga secret değerlerini düz metin olarak değil, hash olarak yazar."
+
+bounce:
+  title: "Bounce"
+  en: "An automatic message saying that a mail could not be delivered. It is sent with an empty sender address, so receivers check [SPF](term:spf) for the sending server's [HELO](term:helo) name instead."
+  tr: "Bir mailin teslim edilemediğini bildiren otomatik mesaj. Gönderici adresi boş gönderildiği için alıcılar [SPF'yi](term:spf) gönderen sunucunun [HELO](term:helo) adı için kontrol eder."
+
+brute-force:
+  title: "Brute force"
+  en: "Guessing a password by trying a huge number of combinations, usually with bots and lists of common passwords."
+  tr: "Bir parolayı çok sayıda kombinasyon deneyerek bulmaya çalışmak; genellikle botlarla ve yaygın parola listeleriyle yapılır."
+
+certbot:
+  title: "Certbot"
+  en: "The most common [ACME](term:acme) client. It gets certificates from Let's Encrypt and renews them with a systemd timer."
+  tr: "En yaygın [ACME](term:acme) istemcisi. Let's Encrypt'ten sertifika alır ve bir systemd zamanlayıcısıyla yeniler."
+  link: "https://certbot.eff.org/"
+
+certificate-transparency:
+  title: "Certificate Transparency"
+  en: "Public logs where certificate authorities have to record every certificate they issue. Anyone can search them, so a new certificate tells the world that a new domain or subdomain exists."
+  tr: "Sertifika otoritelerinin verdikleri her sertifikayı yazmak zorunda olduğu herkese açık loglar. Herkes bu loglarda arama yapabildiği için yeni bir sertifika, yeni bir alan adının veya alt alan adının varlığını herkese duyurur."
+  link: "https://certificate.transparency.dev/"
+
+collation:
+  title: "Collation"
+  en: "The rules a database uses to compare and sort text, for example whether `a` and `A` count as the same letter. `utf8mb4_unicode_ci` ignores case and supports all Unicode characters."
+  tr: "Bir veritabanının metinleri karşılaştırırken ve sıralarken kullandığı kurallar; örneğin `a` ile `A`'nın aynı harf sayılıp sayılmayacağı. `utf8mb4_unicode_ci` büyük/küçük harf ayırmaz ve bütün Unicode karakterlerini destekler."
+
+csp:
+  title: "CSP"
+  en: "Content Security Policy: a header that lists where a page may load scripts, styles and other files from. A strict CSP makes [XSS](term:xss) attacks much harder."
+  tr: "Content Security Policy: bir sayfanın script, stil ve diğer dosyaları nerelerden yükleyebileceğini listeleyen başlık. Sıkı bir CSP, [XSS](term:xss) saldırılarını çok zorlaştırır."
+
+ddos:
+  title: "DDoS"
+  en: "Distributed denial of service: many machines send so much traffic to a service at the same time that it can no longer answer real users."
+  tr: "Distributed denial of service: çok sayıda makinenin aynı anda bir servise o kadar çok trafik göndermesi ki servis gerçek kullanıcılara yanıt veremez hale gelir."
+
+dns-01:
+  title: "DNS-01"
+  en: "An [ACME](term:acme) check done by adding a temporary TXT record to the domain's DNS. It works even when the server can't be reached from the internet, and it is the only way to get a wildcard certificate (`*.example.com`)."
+  tr: "Alan adının DNS'ine geçici bir TXT kaydı eklenerek yapılan [ACME](term:acme) doğrulaması. Sunucuya internetten erişilemese bile çalışır ve wildcard sertifika (`*.example.com`) almanın tek yolu budur."
+
+dns-rebinding:
+  title: "DNS rebinding"
+  en: "An attack where a malicious site makes its domain resolve to `127.0.0.1` or a local IP, so the visitor's browser sends requests to a service that should only be reachable locally. Checking the `Host` header stops it."
+  tr: "Kötü niyetli bir sitenin kendi alan adını `127.0.0.1`'e veya yerel bir IP'ye çözdürüp ziyaretçinin tarayıcısı üzerinden sadece yerelden erişilmesi gereken bir servise istek göndertmesi. `Host` başlığını kontrol etmek bunu engeller."
+
+dnsbl:
+  title: { en: "Blocklist", tr: "Kara liste" }
+  en: "A public list of IP addresses that have sent spam (DNSBL). Many mail servers check these lists and reject mail from the listed addresses, so spam from one IP hurts every domain that sends from it."
+  tr: "Spam göndermiş IP adreslerinin herkese açık listesi (DNSBL). Birçok mail sunucusu bu listelere bakıp listedeki adreslerden gelen mailleri reddeder; bu yüzden bir IP'den çıkan spam, o IP'den mail gönderen bütün alan adlarını etkiler."
+
+docker-compose:
+  title: "Docker Compose"
+  en: "A tool that starts one or more [containers](term:container) from a `compose.yaml` file, with their ports, volumes, networks and settings written down in one place. `docker compose up -d` applies the file."
+  tr: "Bir veya birden fazla [konteyneri](term:container) portları, volume'ları, ağları ve ayarlarıyla birlikte tek bir `compose.yaml` dosyasından başlatan araç. `docker compose up -d` dosyayı uygular."
+
+dovecot:
+  title: "Dovecot"
+  en: "The [IMAP](term:imap) server: it keeps the mail in the mailboxes and lets clients read it. It also checks usernames and passwords when clients send mail through [Postfix](term:postfix)."
+  tr: "[IMAP](term:imap) sunucusu: mailleri posta kutularında saklar ve istemcilerin okumasını sağlar. İstemciler [Postfix](term:postfix) üzerinden mail gönderirken kullanıcı adı ve parola kontrolünü de o yapar."
+  link: "https://www.dovecot.org/"
+
+epel:
+  title: "EPEL"
+  en: "Extra Packages for Enterprise Linux: a package repository from the Fedora project with extra software for RHEL and Rocky Linux that is not in the official repositories (for example Syncthing)."
+  tr: "Extra Packages for Enterprise Linux: Fedora projesinin RHEL ve Rocky Linux için hazırladığı, resmi depolarda olmayan ek paketleri (ör. Syncthing) sunan paket deposu."
+  link: "https://docs.fedoraproject.org/en-US/epel/"
+
+firewalld-policy:
+  title: "Policy (Firewalld)"
+  en: "A set of Firewalld rules for traffic that goes *through* the server from one [zone](term:firewalld-zone) to another, for example from the VPN to the internet."
+  tr: "Sunucunun *üzerinden* bir [zone'dan](term:firewalld-zone) diğerine geçen trafik için Firewalld kuralları; örneğin VPN'den internete giden trafik."
+
+firewalld-zone:
+  title: "Zone (Firewalld)"
+  en: "A set of Firewalld rules for traffic that comes *to* the server itself. Every network interface (or source address) belongs to one zone, and the zone decides which services that traffic may reach."
+  tr: "Sunucunun *kendisine* gelen trafik için Firewalld kuralları. Her ağ arayüzü (veya kaynak adresi) bir zone'a bağlıdır ve zone, o trafiğin hangi servislere erişebileceğine karar verir."
+
+foreign-key:
+  title: "Foreign key"
+  en: "A rule that ties a column to a row in another table. While other rows still point to a row, the database refuses to delete it."
+  tr: "Bir sütunu başka bir tablodaki satıra bağlayan kural. Başka satırlar bir satırı gösterdiği sürece veritabanı o satırın silinmesine izin vermez."
+
+fqdn:
+  title: "FQDN"
+  en: "Fully qualified domain name: the full name of a machine, domain included; for example `mail.xenonly.com` instead of just `mail`."
+  tr: "Fully qualified domain name: bir makinenin alan adıyla birlikte tam adı; örneğin sadece `mail` değil, `mail.xenonly.com`."
+
+full-tunnel:
+  title: "Full tunnel"
+  en: "A VPN setup where all traffic goes through the tunnel (`AllowedIPs = 0.0.0.0/0, ::/0`), so the device goes out to the internet with the server's IP address. See also [split tunnel](term:split-tunnel)."
+  tr: "Bütün trafiğin tünelden geçtiği VPN kullanımı (`AllowedIPs = 0.0.0.0/0, ::/0`); cihaz internete sunucunun IP adresiyle çıkar. Ayrıca bkz. [split tunnel](term:split-tunnel)."
+
+handshake:
+  title: "Handshake (WireGuard)"
+  en: "The short key exchange two WireGuard peers make before they send data, repeated about every two minutes while traffic flows. The time of the latest handshake shows whether a client is really connected."
+  tr: "İki WireGuard peer'ının veri göndermeden önce yaptığı, trafik oldukça yaklaşık iki dakikada bir tekrarlanan kısa anahtar değişimi. Son handshake zamanı, bir istemcinin gerçekten bağlı olup olmadığını gösterir."
+
+hash:
+  title: "Hash"
+  en: "A one-way fingerprint of some data. Passwords are stored as hashes: the server can check a password against the hash, but can't turn the hash back into the password."
+  tr: "Bir verinin tek yönlü parmak izi. Parolalar hash olarak saklanır: sunucu girilen parolayı hash ile karşılaştırabilir, ama hash'ten parolayı geri çıkaramaz."
+
+helo:
+  title: "HELO / EHLO"
+  en: "The first command a mail server sends when it connects to another one, with its own name in it (for example `mail.xenonly.com`). Receivers check this name too, for example with [SPF](term:spf)."
+  tr: "Bir mail sunucusunun diğerine bağlanınca gönderdiği ilk komut; içinde kendi adı (ör. `mail.xenonly.com`) bulunur. Alıcılar bu adı da kontrol eder, örneğin [SPF](term:spf) ile."
+
+hsts:
+  title: "HSTS"
+  en: "HTTP Strict Transport Security: a header that tells the browser to use only HTTPS for a site for a given time (here one year), even if someone types `http://`."
+  tr: "HTTP Strict Transport Security: tarayıcıya bir siteye belirli bir süre (burada bir yıl) boyunca sadece HTTPS ile bağlanmasını söyleyen başlık; biri `http://` yazsa bile."
+
+http-01:
+  title: "HTTP-01"
+  en: "An [ACME](term:acme) check where Let's Encrypt downloads a temporary file from `http://<domain>/.well-known/acme-challenge/`. The domain must point to the server and port 80 must be open. Certbot's webroot method uses it."
+  tr: "Let's Encrypt'in `http://<alan-adı>/.well-known/acme-challenge/` altındaki geçici bir dosyayı indirdiği [ACME](term:acme) doğrulaması. Alan adı sunucuyu göstermeli ve 80 portu açık olmalı. Certbot'un webroot yöntemi bunu kullanır."
+
+image:
+  title: { en: "Image (Docker)", tr: "İmaj (Docker)" }
+  en: "The read-only template a [container](term:container) is created from: the application and everything it needs. Updating means pulling a newer image and recreating the container; the data lives outside the image, in volumes."
+  tr: "Bir [konteynerin](term:container) oluşturulduğu salt okunur şablon: uygulama ve ihtiyaç duyduğu her şey. Güncellemek, yeni imajı çekip konteyneri yeniden oluşturmak demek; veriler imajın dışında, volume'larda durur."
+
+imap:
+  title: "IMAP"
+  en: "Internet Message Access Protocol: how mail clients read mail. The mail stays on the server, so every device sees the same folders. Port 993, with [TLS](term:tls)."
+  tr: "Internet Message Access Protocol: e-posta istemcilerinin mail okuma protokolü. Mailler sunucuda kalır, bu yüzden her cihaz aynı klasörleri görür. [TLS](term:tls) ile 993 portu."
+
+ip-forwarding:
+  title: "IP forwarding"
+  en: "A kernel setting that lets the server pass packets from one network interface to another, like a router. VPN clients need it to reach the internet through the server."
+  tr: "Sunucunun paketleri bir ağ arayüzünden diğerine, bir router gibi geçirmesini sağlayan çekirdek ayarı. VPN istemcilerinin sunucu üzerinden internete çıkabilmesi için gerekli."
+
+iptables:
+  title: "iptables / nftables"
+  en: "The Linux kernel's packet filter and its tools. nftables is the newer one, and Firewalld writes its rules there; Docker writes iptables rules. Both act on the same traffic, so a packet must pass both."
+  tr: "Linux çekirdeğinin paket filtresi ve araçları. nftables daha yenisi ve Firewalld kurallarını oraya yazar; Docker ise iptables kuralları yazar. İkisi de aynı trafiğe uygulanır, yani paketin ikisinden de geçmesi gerekir."
+
+iredadmin:
+  title: "iRedAdmin"
+  en: "iRedMail's web admin panel for domains and mail accounts. The free version has no menus for aliases or sending limits; the paid iRedAdmin-Pro has them."
+  tr: "iRedMail'in alan adları ve mail hesapları için web yönetim paneli. Ücretsiz sürümde alias ve gönderim limiti menüleri yok; bunlar ücretli iRedAdmin-Pro'da var."
+
+iredapd:
+  title: "iRedAPD"
+  en: "iRedMail's policy server. [Postfix](term:postfix) asks it about every mail before accepting it; it handles checks like greylisting and sending limits (throttling)."
+  tr: "iRedMail'in politika sunucusu. [Postfix](term:postfix) her maili kabul etmeden önce ona sorar; greylisting ve gönderim limiti (throttle) gibi kontrolleri o yapar."
+
+iredmail:
+  title: "iRedMail"
+  en: "An open-source script that installs and configures a full mail server in one go: [Postfix](term:postfix), [Dovecot](term:dovecot), [Amavis](term:amavis), [Roundcube](term:roundcube), [iRedAdmin](term:iredadmin), NGINX and MariaDB."
+  tr: "Tam bir mail sunucusunu tek seferde kurup yapılandıran açık kaynak bir script: [Postfix](term:postfix), [Dovecot](term:dovecot), [Amavis](term:amavis), [Roundcube](term:roundcube), [iRedAdmin](term:iredadmin), NGINX ve MariaDB."
+  link: "https://www.iredmail.org/"
+
+jail:
+  title: "Jail (Fail2Ban)"
+  en: "A Fail2Ban rule set for one service: which log to watch, which lines count as a failed login, and how many failures in how much time lead to a ban."
+  tr: "Fail2Ban'de bir servisin kuralları: hangi logun izleneceği, hangi satırların başarısız giriş sayılacağı ve ne kadar sürede kaç hatanın ban'a yol açacağı."
+
+journald:
+  title: "journald"
+  en: "The log service of [systemd](term:systemd). It collects the logs of all services (in this series, of the Docker containers too); `journalctl` reads them."
+  tr: "[systemd'nin](term:systemd) log servisi. Bütün servislerin (bu seride Docker konteynerlerinin de) loglarını toplar; `journalctl` bunları okur."
+
+long-polling:
+  title: "Long polling"
+  en: "A request the server keeps open until it has something new to send (or a timeout runs out); the browser then sends the next one right away. An older way to get live updates without [WebSocket](term:websocket)."
+  tr: "Sunucunun gönderecek yeni bir şey olana kadar (ya da süre dolana kadar) açık tuttuğu istek; tarayıcı hemen ardından yenisini gönderir. [WebSocket](term:websocket) olmadan anlık güncelleme almanın eski bir yolu."
+
+maildir:
+  title: "Maildir"
+  en: "A way of storing mail where every message is a separate file inside the folders `cur`, `new` and `tmp`. Easy to copy and back up with tools like rsync."
+  tr: "Her mailin `cur`, `new` ve `tmp` klasörleri içinde ayrı bir dosya olarak tutulduğu saklama biçimi. rsync gibi araçlarla kopyalaması ve yedeklemesi kolaydır."
+
+mime:
+  title: { en: "MIME type", tr: "MIME türü" }
+  en: "A label that tells the browser what kind of file it gets, for example `text/css` or `image/png`. The server sends it in the `Content-Type` header."
+  tr: "Tarayıcıya aldığı dosyanın türünü söyleyen etiket; örneğin `text/css` veya `image/png`. Sunucu bunu `Content-Type` başlığında gönderir."
+
+mtu:
+  title: "MTU"
+  en: "Maximum transmission unit: the largest packet a network link carries. Every tunnel adds its own headers, so a tunnel inside another tunnel needs a smaller MTU, or packets get dropped."
+  tr: "Maximum transmission unit: bir ağ bağlantısının taşıyabildiği en büyük paket boyutu. Her tünel pakete kendi başlığını eklediği için tünel içinde tünel kullanıldığında MTU küçültülmeli, yoksa paketler düşer."
+
+networkmanager:
+  title: "NetworkManager"
+  en: "The service that manages network connections on most Linux desktops and on RHEL-based servers. Its command-line tool is `nmcli`; it can also import and run WireGuard connections."
+  tr: "Çoğu Linux masaüstünde ve RHEL tabanlı sunucularda ağ bağlantılarını yöneten servis. Komut satırı aracı `nmcli`; WireGuard bağlantılarını da içe aktarıp çalıştırabilir."
+
+peer:
+  title: "Peer (WireGuard)"
+  en: "Another device in a WireGuard tunnel. Each peer is known by its public key and may only send packets from the addresses in its `AllowedIPs`."
+  tr: "WireGuard tünelindeki karşı cihaz. Her peer public key'iyle tanınır ve sadece `AllowedIPs` içindeki adreslerden paket gönderebilir."
+
+php-fpm:
+  title: "PHP-FPM"
+  en: "The service that runs PHP code for the web server. NGINX can't run PHP itself, so it passes `.php` requests to PHP-FPM over a port or a socket."
+  tr: "Web sunucusu için PHP kodunu çalıştıran servis. NGINX PHP'yi kendisi çalıştıramaz; `.php` isteklerini bir port veya socket üzerinden PHP-FPM'e iletir."
+
+postfix:
+  title: "Postfix"
+  en: "The mail transfer agent (MTA): it takes mail from other servers on port 25 and sends our mail out to them. Mail clients also send mail through it, on ports 587 and 465."
+  tr: "Mail aktarım sunucusu (MTA): diğer sunuculardan 25. porttan gelen mailleri alır ve bizim maillerimizi onlara gönderir. E-posta istemcileri de mail göndermek için 587 ve 465 portlarından ona bağlanır."
+  link: "https://www.postfix.org/"
+
+preshared-key:
+  title: "Preshared key"
+  en: "An optional extra secret shared by two WireGuard peers. It adds a second layer of encryption on top of the key pairs, as protection against future quantum computers."
+  tr: "İki WireGuard peer'ının paylaştığı isteğe bağlı ek bir sır. Anahtar çiftlerinin üstüne ikinci bir şifreleme katmanı ekler; gelecekteki kuantum bilgisayarlara karşı bir önlem."
+
+quic:
+  title: "QUIC"
+  en: "A transport protocol on top of UDP, with encryption built in. Syncthing can use it on UDP port 22000 next to TCP; it often gets through NAT more easily."
+  tr: "UDP üzerinde çalışan, şifrelemesi içinde gelen bir taşıma protokolü. Syncthing bunu TCP'nin yanında UDP 22000 portunda kullanabilir; NAT arkasından çoğu zaman daha kolay geçer."
+
+rhel:
+  title: "RHEL"
+  en: "Red Hat Enterprise Linux. Rocky Linux is a free rebuild of it, so guides and packages written for RHEL usually work on Rocky Linux too."
+  tr: "Red Hat Enterprise Linux. Rocky Linux onun ücretsiz bir yeniden derlemesi; bu yüzden RHEL için yazılmış rehberler ve paketler genellikle Rocky Linux'ta da çalışır."
+
+rich-rule:
+  title: "Rich rule"
+  en: "A Firewalld rule written in a longer, more flexible form: it can match a source address, a port and a protocol together, and log, limit, accept or reject the traffic."
+  tr: "Daha uzun ve esnek bir biçimde yazılan Firewalld kuralı: kaynak adresi, port ve protokolü birlikte eşleştirip trafiği loglayabilir, sınırlayabilir, kabul edebilir veya reddedebilir."
+
+roundcube:
+  title: "Roundcube"
+  en: "A webmail application written in PHP, for reading and sending mail in the browser."
+  tr: "PHP ile yazılmış bir webmail uygulaması; tarayıcıdan mail okumak ve göndermek için."
+  link: "https://roundcube.net/"
+
+salt:
+  title: "Salt"
+  en: "Random data mixed into a password or a cookie before hashing, so the same input gives a different [hash](term:hash) on every site. WordPress keeps its salts in `wp-config.php`."
+  tr: "Hash almadan önce parolaya veya çereze karıştırılan rastgele veri; böylece aynı girdi her sitede farklı bir [hash](term:hash) verir. WordPress salt değerlerini `wp-config.php` dosyasında tutar."
+
+sasl:
+  title: "SASL"
+  en: "The login step of [SMTP](term:smtp): before it may send mail through the server, a client proves who it is with a username and password."
+  tr: "[SMTP'nin](term:smtp) giriş adımı: istemci, sunucu üzerinden mail gönderebilmek için önce kullanıcı adı ve parolayla kimliğini kanıtlar."
+
+seal:
+  title: "Seal / unseal (Vault)"
+  en: "Vault keeps its data encrypted. After every start it is *sealed*: it can't read its own data until someone enters the unseal key(s), which rebuild the key that decrypts everything."
+  tr: "Vault verilerini şifreli tutar. Her başlatmadan sonra *sealed* (kilitli) durumdadır: biri unseal key'leri girip her şeyi çözen anahtarı yeniden oluşturana kadar kendi verisini okuyamaz."
+
+self-signed:
+  title: { en: "Self-signed certificate", tr: "Self-signed sertifika" }
+  en: "A certificate the server signed itself, instead of a trusted authority. The connection is still encrypted, but browsers and mail clients can't check who they are talking to, so they show a warning."
+  tr: "Güvenilir bir otorite yerine sunucunun kendi imzaladığı sertifika. Bağlantı yine şifrelidir, ama tarayıcılar ve e-posta istemcileri kiminle konuştuklarını doğrulayamadığı için uyarı gösterir."
+
+serialization:
+  title: { en: "Serialized data", tr: "Serialize edilmiş veri" }
+  en: 'Data such as a PHP array saved as a single string. PHP also writes the length of every text in it (`s:19:"https://example.com"`), so changing the text with a simple search and replace breaks it.'
+  tr: 'PHP dizisi gibi bir verinin tek bir metin olarak saklanmış hali. PHP içindeki her metnin uzunluğunu da yazar (`s:19:"https://example.com"`); bu yüzden metni basit bir bul-değiştir ile değiştirmek veriyi bozar.'
+
+sieve:
+  title: "Sieve"
+  en: "A small language for mail filters that run on the server, for example to move mail into folders or to send an out-of-office reply."
+  tr: "Sunucuda çalışan mail filtreleri için küçük bir dil; örneğin mailleri klasörlere taşımak veya otomatik yanıt göndermek için."
+
+slaac:
+  title: "SLAAC / Router Advertisement"
+  en: "A way to get an IPv6 address automatically: the router announces the network (Router Advertisement) and the server builds its own address from it. When forwarding is on, Linux ignores these announcements unless `accept_ra` is set to `2`."
+  tr: "IPv6 adresini otomatik almanın bir yolu: router ağı duyurur (Router Advertisement) ve sunucu kendi adresini bundan oluşturur. Forwarding açıkken Linux, `accept_ra` değeri `2` yapılmadıkça bu duyuruları yok sayar."
+
+smtp:
+  title: "SMTP"
+  en: "Simple Mail Transfer Protocol: how mail is sent. Servers talk to each other on port 25; clients log in and send on port 587 ([STARTTLS](term:starttls)) or 465 ([TLS](term:tls))."
+  tr: "Simple Mail Transfer Protocol: mail gönderme protokolü. Sunucular birbirleriyle 25. porttan konuşur; istemciler giriş yapıp 587 ([STARTTLS](term:starttls)) veya 465 ([TLS](term:tls)) portundan gönderir."
+
+sni:
+  title: "SNI"
+  en: "Server Name Indication: at the start of a [TLS](term:tls) connection, the client says which name it wants (`mail.xenonly.com`). This way one IP address can serve many sites, each with its own certificate."
+  tr: "Server Name Indication: istemci [TLS](term:tls) bağlantısının başında hangi adı istediğini (`mail.xenonly.com`) söyler. Bu sayede tek bir IP adresi, her biri kendi sertifikasıyla birçok siteyi sunabilir."
+
+split-tunnel:
+  title: "Split tunnel"
+  en: "A VPN setup where only the traffic for some networks (here the VPN network `10.8.0.0/24`) goes through the tunnel; everything else uses the normal internet connection. See also [full tunnel](term:full-tunnel)."
+  tr: "Sadece belirli ağlara (burada VPN ağı `10.8.0.0/24`) giden trafiğin tünelden geçtiği VPN kullanımı; geri kalan her şey normal internet bağlantısından gider. Ayrıca bkz. [full tunnel](term:full-tunnel)."
+
+sqlite:
+  title: "SQLite"
+  en: "A database kept in a single file, without a separate database server. Enough for small, single-user applications, and easy to back up."
+  tr: "Ayrı bir veritabanı sunucusu olmadan tek bir dosyada tutulan veritabanı. Küçük, tek kullanıcılı uygulamalar için yeterli ve yedeklemesi kolay."
+  link: "https://sqlite.org/"
+
+starttls:
+  title: "STARTTLS"
+  en: "A command that turns a plain connection into an encrypted [TLS](term:tls) connection on the same port. Port 465, on the other hand, uses TLS from the very first byte."
+  tr: "Düz başlayan bir bağlantıyı aynı port üzerinde şifreli bir [TLS](term:tls) bağlantısına çeviren komut. 465 portu ise ilk bayttan itibaren TLS kullanır."
+
+ttl:
+  title: "TTL"
+  en: "Time to live: how many seconds DNS resolvers may cache a record. With a long TTL, a changed record reaches everyone only after that time has passed."
+  tr: "Time to live: bir DNS kaydının çözücülerde kaç saniye önbellekte tutulabileceği. TTL uzunsa değiştirilen kayıt herkese ancak bu süre dolduktan sonra ulaşır."
+
+virtual-host:
+  title: "Virtual host"
+  en: "A separate site configuration in the web server. NGINX picks the virtual host by the requested name (`server_name`), so one server can host many domains."
+  tr: "Web sunucusundaki ayrı bir site yapılandırması. NGINX istenen ada (`server_name`) bakarak virtual host'u seçer; böylece tek sunucu birçok alan adını sunabilir."
+
+vnc:
+  title: { en: "VNC console", tr: "VNC konsolu" }
+  en: "The server's screen and keyboard in the provider's web panel. It works without the network and without SSH, so it is the way back in if you lock yourself out."
+  tr: "Sağlayıcının web panelinde sunucunun ekranı ve klavyesi gibi çalışan konsol. Ağ ve SSH olmadan da çalışır; kendimizi sunucunun dışında bıraktığımızda geri girmenin yolu budur."
+
+vps:
+  title: "VPS"
+  en: "Virtual private server: a virtual machine rented from a hosting provider. You get root access and your own public IP addresses, but the hardware is shared with other customers."
+  tr: "Virtual private server: bir sağlayıcıdan kiralanan sanal makine. Root yetkisi ve kendi public IP adresleri olur, ama donanım diğer müşterilerle paylaşılır."
+
+waf:
+  title: "WAF"
+  en: "Web application firewall: it filters the HTTP requests to a web application and blocks the ones that look like attacks. On WordPress it usually comes as a security plugin."
+  tr: "Web application firewall: bir web uygulamasına gelen HTTP isteklerini filtreleyip saldırıya benzeyenleri engeller. WordPress'te genellikle bir güvenlik eklentisi olarak gelir."
+
+webauthn:
+  title: "WebAuthn"
+  en: "A web standard for logging in with a security key, a passkey or the device's fingerprint reader, instead of (or next to) a password."
+  tr: "Parola yerine (veya parolanın yanında) güvenlik anahtarı, passkey ya da cihazın parmak izi okuyucusuyla giriş yapmayı sağlayan web standardı."
+
+websocket:
+  title: "WebSocket"
+  en: "A connection that starts as an HTTP request and then stays open, so the server can send data to the browser at any time. Used for live updates, for example syncing a password vault."
+  tr: "Bir HTTP isteğiyle başlayıp açık kalan bağlantı; sunucu tarayıcıya istediği an veri gönderebilir. Anlık güncellemeler için kullanılır, örneğin parola kasasının senkronizasyonu."
+
+wp-cli:
+  title: "WP-CLI"
+  en: "The command-line tool for WordPress: installing plugins, changing settings or searching and replacing in the database without the admin panel."
+  tr: "WordPress'in komut satırı aracı: yönetim paneline girmeden eklenti kurma, ayar değiştirme veya veritabanında bul-değiştir yapma."
+  link: "https://wp-cli.org/"
+
+xss:
+  title: "XSS"
+  en: "Cross-site scripting: an attack where someone gets their own JavaScript to run on another site's page, for example to steal session cookies."
+  tr: "Cross-site scripting: saldırganın kendi JavaScript kodunu başka bir sitenin sayfasında çalıştırdığı saldırı; örneğin oturum çerezlerini çalmak için."

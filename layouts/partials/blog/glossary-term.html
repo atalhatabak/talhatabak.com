@@ -1,0 +1,48 @@
+{{- /*
+  Looks up a glossary term (data/glossary.yaml) in the page's language.
+  Context: dict "key" "page". Returns "" for an unknown key, otherwise a dict:
+    key, title, text (Markdown),
+    missing   the page's language when the term has no text in it (the
+              default language's text is used instead),
+    link, linkHost   optional page for further reading,
+    href      the term's entry on the glossary page ("" without that page).
+*/ -}}
+{{- $key := lower .key -}}
+{{- $page := .page -}}
+{{- $lang := $page.Language.Lang -}}
+{{- $fallback := hugo.Sites.Default.Language.Lang -}}
+{{- $result := "" -}}
+{{- with index (hugo.Data.glossary | default dict) $key -}}
+  {{- $title := .title | default $key -}}
+  {{- if reflect.IsMap $title -}}
+    {{- $title = index $title $lang | default (index $title $fallback) | default $key -}}
+  {{- end -}}
+  {{- $text := index . $lang | default "" -}}
+  {{- $missing := "" -}}
+  {{- if not $text -}}
+    {{- $missing = $lang -}}
+    {{- $text = index . $fallback | default "" -}}
+  {{- end -}}
+  {{- $link := .link | default "" -}}
+  {{- if reflect.IsMap $link -}}
+    {{- $link = index $link $lang | default (index $link $fallback) | default "" -}}
+  {{- end -}}
+  {{- $host := "" -}}
+  {{- with $link -}}
+    {{- $host = strings.TrimPrefix "www." (urls.Parse .).Host -}}
+  {{- end -}}
+  {{- $href := "" -}}
+  {{- with $page.Site.GetPage "/glossary" -}}
+    {{- $href = printf "%s#%s" .RelPermalink $key -}}
+  {{- end -}}
+  {{- $result = dict
+    "key" $key
+    "title" (string $title)
+    "text" (string $text)
+    "missing" $missing
+    "link" (string $link)
+    "linkHost" $host
+    "href" $href
+  -}}
+{{- end -}}
+{{- return $result -}}

@@ -1,0 +1,15 @@
+{{- /*
+  Loads Mermaid for ```mermaid code fences. The theme only loads it for the
+  {{< mermaid >}} shortcode (partials/vendor.html). render-codeblock-mermaid.html
+  marks pages that contain a fenced diagram; call this partial after .Content
+  so the mark is set. `defer` scripts still run before DOMContentLoaded, where
+  the theme's appearance.js draws the diagrams in the current light/dark mode.
+  Context: the page.
+*/ -}}
+{{- if and (.Store.Get "hasMermaid") (not (.HasShortcode "mermaid")) -}}
+  {{- $alg := site.Params.fingerprintAlgorithm | default "sha512" -}}
+  {{- $mermaidLib := resources.Get "lib/mermaid/mermaid.min.js" -}}
+  {{- $mermaidConfig := resources.Get "js/mermaid.js" | resources.Minify -}}
+  {{- $mermaidJS := slice $mermaidLib $mermaidConfig | resources.Concat "js/mermaid.bundle.js" | resources.Fingerprint $alg }}
+  <script defer src="{{ $mermaidJS.RelPermalink }}" integrity="{{ $mermaidJS.Data.Integrity }}"></script>
+{{- end -}}

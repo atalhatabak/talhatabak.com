@@ -1,0 +1,25 @@
+disabled = false
+locale = "tr"
+label = "Türkçe"
+weight = 2
+title = "Talha Tabak"
+
+[params]
+  displayName = "Türkçe"
+  isoCode = "tr"
+  rtl = false
+  dateFormat = "2 January 2006"
+  logo = "img/logo.svg"
+  description = "Self-hosting, Linux ve altyapı üzerine; kurarken tuttuğum notlar."
+  # copyright = "© { year } Talha Tabak"
+
+[params.author]
+  name = "Talha Tabak"
+  headline = "Linux · Altyapı · DevOps · Yazılım"
+  bio = "Kendi sunucularımı yönetiyorum; kurduğum, bozduğum ve düzelttiğim her şeyi not alıyorum."
+  links = [
+    { github = "https://github.com/atalhatabak" },
+    { linkedin = "https://www.linkedin.com/in/atalhatabak" },
+    { email = "mailto:talha@talhatabak.com" },  # must start with mailto: or the theme prints it in <head>
+    { rss = "/tr/index.xml" },
+  ]

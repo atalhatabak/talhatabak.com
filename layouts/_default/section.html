@@ -1,0 +1,77 @@
+{{- /*
+  Category page (every top-level section in content/ is a category).
+
+  Shows the category intro (_index.md), the series map of all chaptered
+  posts, and a date-ordered list of the posts without a chapter.
+*/ -}}
+{{ define "main" }}
+  {{ .Scratch.Set "scope" "list" }}
+  {{ $chapters := partialCached "blog/chapters.html" . .RelPermalink }}
+  {{ $all := .RegularPages }}
+  {{ $others := union (where $all "Params.chapter" "==" nil) (where $all "Params.chapter" "==" "") }}
+  {{ $minutes := 0 }}
+  {{ range $all }}{{ $minutes = add $minutes .ReadingTime }}{{ end }}
+
+  <div class="page-shell">
+    <header class="list-header">
+      <p class="list-eyebrow">
+        {{- partial "blog/icon.html" (.Params.icon | default "folder") -}}
+        <span>{{ cond (gt (len $chapters) 0) (i18n "blog.series") (i18n "blog.category") }}</span>
+      </p>
+      <h1 class="list-title">{{ .Title | emojify }}</h1>
+      {{ with .Description }}
+        <p class="list-lead">{{ . | markdownify | emojify }}</p>
+      {{ end }}
+      {{ with $all }}
+        <ul class="list-stats" role="list">
+          <li>
+            {{- partial "blog/icon.html" "book-open" -}}
+            {{ if $chapters }}{{ i18n "blog.parts" (len $chapters) }}{{ else }}{{ i18n "blog.posts" (len $all) }}{{ end }}
+          </li>
+          {{ if gt $minutes 0 }}
+            <li>{{ partial "blog/icon.html" "clock" }}{{ i18n "blog.total_reading" $minutes }}</li>
+          {{ end }}
+          {{ with index ($all.ByLastmod.Reverse) 0 }}
+            <li>{{ partial "blog/icon.html" "calendar" }}{{ i18n "blog.updated" (dict "Date" (partial "functions/date.html" .Lastmod)) }}</li>
+          {{ end }}
+        </ul>
+      {{ end }}
+      {{ with $chapters }}
+        <div class="list-actions">
+          <a class="btn btn--primary" href="{{ (index . 0).page.RelPermalink }}">{{ i18n "blog.start_reading" }}{{ partial "blog/icon.html" "arrow-right" }}</a>
+        </div>
+      {{ end }}
+    </header>
+
+    {{ with .Content }}
+      <div class="list-intro article-content prose dark:prose-invert">{{ . }}</div>
+    {{ end }}
+    {{ partial "blog/mermaid-loader.html" . }}
+    {{ partial "blog/glossary-defs.html" . }}
+
+    {{ with $chapters }}
+      <section class="list-section" aria-labelledby="series-map">
+        <h2 class="list-section__title" id="series-map">{{ partial "blog/icon.html" "map" }}<span>{{ i18n "blog.the_map" }}</span></h2>
+        {{ partial "blog/chapter-tree.html" (dict "items" . "variant" "full") }}
+      </section>
+    {{ end }}
+
+    {{ with $others }}
+      <section class="list-section" aria-labelledby="category-posts">
+        <h2 class="list-section__title" id="category-posts">
+          {{- partial "blog/icon.html" "notebook" -}}
+          <span>{{ cond (gt (len $chapters) 0) (i18n "blog.other_posts") (i18n "blog.posts_title") }}</span>
+        </h2>
+        <div class="post-list">
+          {{ range .ByDate.Reverse }}
+            {{ partial "blog/post-item.html" (dict "page" . "showCategory" false) }}
+          {{ end }}
+        </div>
+      </section>
+    {{ end }}
+
+    {{ if not $all }}
+      <p class="list-empty">{{ i18n "list.no_articles" | emojify }}</p>
+    {{ end }}
+  </div>
+{{ end }}

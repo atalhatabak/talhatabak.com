@@ -1,0 +1,64 @@
+{{- /*
+  Category / series card on the home page.
+  Context: a category section page.
+*/ -}}
+{{- $chapters := partialCached "blog/chapters.html" . .RelPermalink -}}
+{{- $pages := .RegularPages -}}
+{{- $limit := 6 -}}
+<article class="category-card{{ if $chapters }} category-card--series{{ end }}">
+  <header class="category-card__head">
+    <span class="category-card__icon">{{ partial "blog/icon.html" (.Params.icon | default "folder") }}</span>
+    <div class="category-card__heading">
+      <h3 class="category-card__title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+      <p class="category-card__meta">
+        {{- if $chapters -}}
+          {{ i18n "blog.series" }} · {{ i18n "blog.parts" (len $chapters) }}
+        {{- else -}}
+          {{ i18n "blog.posts" (len $pages) }}
+        {{- end -}}
+      </p>
+    </div>
+  </header>
+
+  {{- with .Description }}
+    <p class="category-card__desc">{{ . | markdownify | plainify }}</p>
+  {{- end }}
+
+  {{- if $chapters }}
+    {{- $top := where $chapters "depth" 1 }}
+    <ol class="category-card__list" role="list">
+      {{- range first $limit $top }}
+        {{- $prefix := printf "%s." .chapter -}}
+        {{- $children := 0 -}}
+        {{- range $chapters -}}
+          {{- if hasPrefix .chapter $prefix }}{{ $children = add $children 1 }}{{ end -}}
+        {{- end }}
+        <li>
+          <a href="{{ .page.RelPermalink }}">
+            <span class="category-card__num">{{ .chapter }}</span>
+            <span class="category-card__name">{{ .page.LinkTitle }}</span>
+          </a>
+          {{- if $children }}<span class="category-card__sub" title="{{ i18n "blog.subparts" $children }}">+{{ $children }}</span>{{ end }}
+        </li>
+      {{- end }}
+    </ol>
+    {{- if gt (len $top) $limit }}
+      <p class="category-card__more">{{ i18n "blog.and_more" (sub (len $top) $limit) }}</p>
+    {{- end }}
+    <div class="category-card__actions">
+      {{- with index $chapters 0 }}
+        <a class="btn btn--primary btn--sm" href="{{ .page.RelPermalink }}">{{ i18n "blog.start_reading" }}{{ partial "blog/icon.html" "arrow-right" }}</a>
+      {{- end }}
+      <a class="btn btn--ghost btn--sm" href="{{ .RelPermalink }}">{{ partial "blog/icon.html" "map" }}{{ i18n "blog.view_map" }}</a>
+    </div>
+  {{- else }}
+    <ul class="category-card__list category-card__list--plain" role="list">
+      {{- range first 4 $pages.ByDate.Reverse }}
+        <li><a href="{{ .RelPermalink }}"><span class="category-card__name">{{ .LinkTitle }}</span></a></li>
+      {{- end }}
+    </ul>
+    <div class="category-card__actions">
+      <a class="btn btn--ghost btn--sm" href="{{ .RelPermalink }}">{{ i18n "blog.browse" }}{{ partial "blog/icon.html" "arrow-right" }}</a>
+    </div>
+  {{- end }}
+</article>

@@ -1,0 +1,25 @@
+disabled = false
+locale = "en"
+label = "English"
+weight = 1
+title = "Talha Tabak"
+
+[params]
+  displayName = "English"
+  isoCode = "en"
+  rtl = false
+  dateFormat = "2 January 2006"
+  logo = "img/logo.svg"
+  description = "Notes on self-hosting, Linux and infrastructure, written down while building it."
+  # copyright = "© { year } Talha Tabak"
+
+[params.author]
+  name = "Talha Tabak"
+  headline = "Linux · Infrastructure · DevOps · Software"
+  bio = "I run my own servers and document everything I set up, break and fix along the way."
+  links = [
+    { github = "https://github.com/atalhatabak" },
+    { linkedin = "https://www.linkedin.com/in/atalhatabak" },
+    { email = "mailto:talha@talhatabak.com" },  # must start with mailto: or the theme prints it in <head>
+    { rss = "/index.xml" },
+  ]

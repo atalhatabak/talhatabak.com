@@ -1,0 +1,11 @@
+{{- /*
+  Renders a glossary explanation (inline Markdown) to HTML. Other terms
+  inside it, [SPF](term:spf), become links to their glossary entries instead
+  of opening another card. Context: dict "page" "text". Returns HTML.
+*/ -}}
+{{- $md := replaceRE `\]\(term:([^)\s]+)\)` "](/glossary/#$1)" .text -}}
+{{- $html := .page.RenderString $md | string -}}
+{{- /* The card sits inside a sentence: no paragraphs */ -}}
+{{- $html = replaceRE `</p>\s*<p>` "<br><br>" $html -}}
+{{- $html = replaceRE `</?p>` "" $html -}}
+{{- return ($html | safeHTML) -}}

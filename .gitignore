@@ -1,0 +1,19 @@
+# Build output: `hugo --gc --minify` (published with tools/deploy.sh) and the
+# local preview written by `hugo server` (config/development/hugo.toml).
+/public/
+/public-dev/
+
+# Hugo caches
+/resources/_gen/
+/.hugo_build.lock
+hugo_stats.json
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Obsidian settings, if content/ is opened as a vault
+.obsidian/

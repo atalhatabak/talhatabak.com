@@ -1,0 +1,37 @@
+{{- /*
+  One post in a list (home page, category page).
+  Params (dict): page, showCategory (bool)
+*/ -}}
+{{- $p := .page -}}
+{{- $section := $p.CurrentSection -}}
+<article class="post-item">
+  <div class="post-item__meta">
+    <time datetime="{{ $p.Date | time.Format "2006-01-02" }}">{{ partial "functions/date.html" $p.Date }}</time>
+    {{- if and .showCategory $section (not $section.IsHome) }}
+      <span class="sep" aria-hidden="true">·</span>
+      <a class="post-item__category" href="{{ $section.RelPermalink }}">{{ $section.Title }}</a>
+    {{- end }}
+    {{- with $p.Params.chapter }}
+      <span class="chip chip--chapter">{{ i18n "blog.part" (dict "Chapter" .) }}</span>
+    {{- end }}
+    {{- if $p.Draft }}
+      <span class="chip chip--draft">{{ i18n "article.draft" }}</span>
+    {{- end }}
+  </div>
+  <h3 class="post-item__title">
+    <a class="post-item__link" href="{{ $p.RelPermalink }}">{{ $p.Title | emojify }}</a>
+  </h3>
+  {{- with $p.Description | default ($p.Summary | plainify) }}
+    <p class="post-item__desc">{{ . | markdownify | plainify | truncate 220 }}</p>
+  {{- end }}
+  <div class="post-item__foot">
+    {{- if ne $p.ReadingTime 0 }}
+      <span>{{ partial "blog/icon.html" "clock" }}{{ i18n "blog.min_read" $p.ReadingTime }}</span>
+    {{- end }}
+    {{- with $p.GetTerms "tags" }}
+      <span class="post-item__tags">
+        {{- range first 3 . }}<span>#{{ .LinkTitle }}</span>{{ end -}}
+      </span>
+    {{- end }}
+  </div>
+</article>

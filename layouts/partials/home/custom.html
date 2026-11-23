@@ -1,0 +1,82 @@
+{{- /*
+  Home page (params.toml -> homepage.layout = "custom").
+  A short intro (author profile + content/_index.md), the categories /
+  series, and the latest posts. Reading is the point, so the intro is
+  kept compact.
+*/ -}}
+{{ $author := site.Params.author }}
+{{ $posts := where site.RegularPages "Section" "in" site.Params.mainSections }}
+<div class="home">
+  {{- /* Home background: assets/img/home-bg/ ("North" by Andrey Koshelev, CC BY-SA; credited in README.md, linked from the footer). */ -}}
+  {{ $bgLight := resources.Get "img/home-bg/light.jpg" }}
+  {{ $bgDark := resources.Get "img/home-bg/dark.jpg" }}
+  {{ if and $bgLight $bgDark }}
+    {{- /* Blurred at build time so only the colours remain; a blurred image needs no
+       large copy, so one small file serves every screen. */ -}}
+    {{ $blur := images.GaussianBlur 10 }}
+    <style>
+      .home-bg {
+        --home-bg-light: url("{{ (($bgLight.Resize "960x webp q72").Filter $blur).RelPermalink }}");
+        --home-bg-dark: url("{{ (($bgDark.Resize "960x webp q72").Filter $blur).RelPermalink }}");
+      }
+    </style>
+    <div class="home-bg" aria-hidden="true"></div>
+  {{ end }}
+  <section class="home-intro">
+    {{ with $author.image }}
+      {{ with resources.Get . }}
+        {{ $img := . }}
+        {{ if ne .MediaType.SubType "svg" }}
+          {{ $img = .Fill "256x256 Center q90" }}
+        {{ end }}
+        <img class="home-intro__avatar nozoom" src="{{ $img.RelPermalink }}" width="128" height="128" alt="{{ $author.name }}" fetchpriority="high">
+      {{ end }}
+    {{ end }}
+    <div class="home-intro__text">
+      <h1 class="home-intro__name">{{ $author.name | default site.Title }}</h1>
+      {{ with $author.headline }}
+        <p class="home-intro__headline">{{ . | markdownify }}</p>
+      {{ end }}
+      {{ with .Content }}
+        <div class="home-intro__bio">{{ . }}</div>
+      {{ end }}
+      {{ partial "blog/glossary-defs.html" . }}
+      <div class="home-intro__actions">
+        {{ partial "author-links.html" . }}
+        {{ with site.GetPage "/about" }}
+          <a class="link-arrow" href="{{ .RelPermalink }}">{{ i18n "blog.more_about_me" }}{{ partial "blog/icon.html" "arrow-right" }}</a>
+        {{ end }}
+      </div>
+    </div>
+  </section>
+
+  {{ $categories := where site.Sections "Section" "in" site.Params.mainSections }}
+  {{ with $categories }}
+    <section class="home-section" aria-labelledby="home-categories">
+      <div class="home-section__head">
+        <h2 class="home-section__title" id="home-categories">{{ i18n "blog.series_and_categories" }}</h2>
+      </div>
+      <div class="category-grid">
+        {{ range .ByWeight }}
+          {{ partial "blog/category-card.html" . }}
+        {{ end }}
+      </div>
+    </section>
+  {{ end }}
+
+  {{ with first (site.Params.homepage.showRecentItems | default 6) $posts.ByDate.Reverse }}
+    <section class="home-section" aria-labelledby="home-latest">
+      <div class="home-section__head">
+        <h2 class="home-section__title" id="home-latest">{{ i18n "blog.latest_posts" }}</h2>
+        {{ with site.GetPage "/posts" }}
+          <a class="link-arrow" href="{{ .RelPermalink }}">{{ i18n "blog.all_posts" }}{{ partial "blog/icon.html" "arrow-right" }}</a>
+        {{ end }}
+      </div>
+      <div class="post-list">
+        {{ range . }}
+          {{ partial "blog/post-item.html" (dict "page" . "showCategory" true) }}
+        {{ end }}
+      </div>
+    </section>
+  {{ end }}
+</div>

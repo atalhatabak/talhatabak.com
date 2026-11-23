@@ -1,0 +1,19 @@
+{{- /*
+  Stops the build when an image still carries GPS coordinates, as phone photos
+  usually do. Original files are published with the site and kept in this
+  public repository, so the location has to be removed from the file itself;
+  the error message shows the command.
+  Context: dict "images" (image resources) "dir" (their folder, for the message).
+  GPS fields are readable because of [imaging.meta] in config/_default/hugo.toml.
+*/ -}}
+{{- $dir := .dir -}}
+{{- range .images -}}
+  {{- if reflect.IsImageResourceWithMeta . -}}{{- /* skips SVG and non-image files such as licence metadata */ -}}
+    {{- $file := path.Join $dir .Name -}}
+    {{- with .Meta -}}
+      {{- if or .Lat .Long -}}
+        {{- errorf "%s contains GPS coordinates (where the photo was taken). Remove its metadata, then rebuild:\n    magick %q -auto-orient -strip %q" $file $file $file -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}

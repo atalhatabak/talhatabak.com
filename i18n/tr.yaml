@@ -1,0 +1,116 @@
+# Bu sitenin kendi şablonlarının metinleri (layouts/partials/blog/...).
+blog:
+  series: "Seri"
+  category: "Kategori"
+  part: "Bölüm {{ .Chapter }}"
+  position: "{{ .Total }} bölümün {{ .Position }}. sırası"
+  series_map: "Seri haritası"
+  the_map: "Seri haritası"
+  on_this_page: "Bu sayfada"
+  previous: "Önceki"
+  next: "Sonraki"
+  post_navigation: "Yazılar arası gezinme"
+  back_to_map: "{{ .Series }} serisinin tüm bölümleri"
+  start_reading: "Okumaya başla"
+  view_map: "Seri haritası"
+  browse: "Yazılara göz at"
+  min_read:
+    one: "{{ .Count }} dk okuma"
+    other: "{{ .Count }} dk okuma"
+  total_reading:
+    one: "toplam {{ .Count }} dk okuma"
+    other: "toplam {{ .Count }} dk okuma"
+  parts:
+    one: "{{ .Count }} bölüm"
+    other: "{{ .Count }} bölüm"
+  subparts:
+    one: "{{ .Count }} alt bölüm"
+    other: "{{ .Count }} alt bölüm"
+  posts:
+    one: "{{ .Count }} yazı"
+    other: "{{ .Count }} yazı"
+  and_more:
+    one: "ve {{ .Count }} bölüm daha"
+    other: "ve {{ .Count }} bölüm daha"
+  updated: "Güncellendi: {{ .Date }}"
+  posts_title: "Yazılar"
+  other_posts: "Bu kategorideki diğer yazılar"
+  latest_posts: "Son yazılar"
+  all_posts: "Tüm yazılar"
+  series_and_categories: "Seriler ve kategoriler"
+  more_about_me: "Hakkımda daha fazlası"
+  archive: "Arşiv"
+  glossary: "Sözlük"
+  glossary_open: "Sözlükte aç"
+  glossary_used_in: "Geçtiği yazılar"
+  glossary_letters: "Harfe git"
+  glossary_terms:
+    one: "{{ .Count }} terim"
+    other: "{{ .Count }} terim"
+
+# --- Temanın (Blowfish) Türkçe çevirisinde eksik veya çevrilmemiş metinler ---
+# themes/blowfish/i18n/tr.yaml dosyasındaki anahtarları tamamlar/düzeltir.
+
+article:
+  anchor_label: "Bu başlığın bağlantısı"
+  table_of_contents: "İçindekiler"
+  part_of_series: "Bu yazı bir serinin parçası."
+  part: "Bölüm"
+  this_article: "Bu yazı"
+  related_articles: "İlgili yazılar"
+  views:
+    one: "{{ .Count }} görüntülenme"
+    other: "{{ .Count }} görüntülenme"
+  likes:
+    one: "{{ .Count }} beğeni"
+    other: "{{ .Count }} beğeni"
+  zen_mode_title:
+    enable: "Odak modunu aç"
+    disable: "Odak modunu kapat"
+
+a11y:
+  disable_blur: "Bulanıklığı kapat"
+  disable_images: "Arka plan görselini kapat"
+  show_link_underline: "Bağlantıların altını çiz"
+  font_size: "Yazı boyutu"
+
+error:
+  404_title: "Sayfa bulunamadı :confused:"
+  404_description: "Aradığın sayfa yok ya da taşınmış olabilir."
+  404_home: "Ana sayfaya dön"
+
+nav:
+  close_menu: "Menüyü kapat"
+  footer_menu: "Alt menü"
+  main_menu: "Ana menü"
+  mobile_menu: "Mobil menü"
+  toggle_submenu: "Alt menüyü aç/kapat"
+
+search:
+  open_button_title: "Ara (/ veya ⌘K)"
+
+sharing:
+  bluesky: "Bluesky'da paylaş"
+  whatsapp: "WhatsApp ile paylaş"
+  telegram: "Telegram ile paylaş"
+  mastodon: "Mastodon'da paylaş"
+
+shortcode:
+  recent_articles: "Son yazılar"
+
+admonition:
+  abstract: "Özet"
+  bug: "Hata"
+  caution: "Dikkat"
+  danger: "Tehlike"
+  example: "Örnek"
+  failure: "Başarısız"
+  important: "Önemli"
+  info: "Bilgi"
+  note: "Not"
+  question: "Soru"
+  quote: "Alıntı"
+  success: "Başarılı"
+  tip: "İpucu"
+  todo: "Yapılacak"
+  warning: "Uyarı"

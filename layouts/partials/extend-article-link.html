@@ -1,0 +1,4 @@
+{{- /* Theme hook inside article-link/simple.html (tag pages, search lists). */ -}}
+{{- with .Params.chapter -}}
+  <span class="chip chip--chapter">{{ i18n "blog.part" (dict "Chapter" .) }}</span>
+{{- end -}}

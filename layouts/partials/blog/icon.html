@@ -1,0 +1,9 @@
+{{- /*
+  Inline icon. Looks in assets/icons/ui/<name>.svg first (this site's
+  stroke icons), then in the theme's assets/icons/<name>.svg.
+  Context: icon name (string).
+*/ -}}
+{{- $icon := or (resources.Get (printf "icons/ui/%s.svg" .)) (resources.Get (printf "icons/%s.svg" .)) -}}
+{{- with $icon -}}
+  <span class="bi" aria-hidden="true">{{ .Content | safeHTML }}</span>
+{{- end -}}

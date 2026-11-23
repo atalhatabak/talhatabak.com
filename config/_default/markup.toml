@@ -1,0 +1,42 @@
+# -- Markup --
+# The Goldmark settings below are required by Blowfish (unsafe HTML,
+# block attributes, passthrough for math).
+
+[goldmark]
+  [goldmark.parser]
+    wrapStandAloneImageWithinParagraph = false
+    # Heading IDs keep Turkish letters (e.g. #kurulum-adımları) so that
+    # links to headings stay readable in both languages.
+    autoHeadingIDType = "github"
+
+    [goldmark.parser.attribute]
+      block = true
+
+  [goldmark.renderer]
+    # Raw HTML in Markdown (<details>, <kbd>, ...) is allowed.
+    unsafe = true
+    # Obsidian renders a single newline as a line break. Keep the same
+    # behaviour so notes copied from Obsidian look the same here.
+    # Set to false for strict CommonMark paragraphs.
+    hardWraps = true
+
+  [goldmark.extensions]
+    [goldmark.extensions.passthrough]
+      enable = true
+      [goldmark.extensions.passthrough.delimiters]
+        block = [['\[', '\]'], ['$$', '$$']]
+        inline = [['\(', '\)']]
+
+[highlight]
+  noClasses = false
+  guessSyntax = false
+  lineNumbersInTable = false
+  tabWidth = 4
+
+# The table of contents is rendered by layouts/partials/blog/toc.html,
+# which detects the top heading level used by each document
+# (# or ##) and shows three levels from there.
+[tableOfContents]
+  startLevel = 1
+  endLevel = 6
+  ordered = false

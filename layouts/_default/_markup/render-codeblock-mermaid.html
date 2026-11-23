@@ -1,0 +1,12 @@
+{{- /*
+  ```mermaid fenced blocks (Obsidian / GitHub style) render as diagrams.
+  The Mermaid library is loaded by layouts/partials/extend-head-uncached.html
+  only on pages that contain a diagram.
+*/ -}}
+<figure class="mermaid-figure not-prose">
+  <pre class="not-prose mermaid">{{ .Inner | htmlEscape | safeHTML }}</pre>
+  {{- with .Attributes.caption }}
+    <figcaption>{{ . | markdownify }}</figcaption>
+  {{- end }}
+</figure>
+{{- .Page.Store.Set "hasMermaid" true -}}

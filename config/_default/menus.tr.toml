@@ -1,0 +1,58 @@
+# -- Ana menü (üst kısım) --
+# "Seriler" bir açılır menü. Yeni bir kategori (content/<kategori>/)
+# eklediğinde aşağıya parent = "series" ile ekle.
+
+[[main]]
+  identifier = "series"
+  name = "Seriler"
+  url = "/tr/#home-categories"  # ana sayfadaki kategoriler
+  weight = 10
+
+[[main]]
+  name = "Self Hosting"
+  pageRef = "self-hosting"
+  parent = "series"
+  weight = 10
+
+[[main]]
+  name = "Yazılar"
+  pageRef = "posts"
+  weight = 20
+
+[[main]]
+  name = "Hakkımda"
+  pageRef = "about"
+  weight = 30
+
+# -- Alt menü (footer) --
+
+[[footer]]
+  name = "Hakkımda"
+  pageRef = "about"
+  weight = 10
+
+[[footer]]
+  name = "Yazılar"
+  pageRef = "posts"
+  weight = 20
+
+[[footer]]
+  name = "Etiketler"
+  pageRef = "tags"
+  weight = 30
+
+[[footer]]
+  name = "RSS"
+  url = "/tr/index.xml"
+  weight = 40
+
+[[footer]]
+  name = "Sözlük"
+  pageRef = "glossary"
+  weight = 25
+
+# Repository; its README credits the third-party assets (home background, CC BY-SA).
+[[footer]]
+  name = "Kaynak kod"
+  url = "https://github.com/atalhatabak/talhatabak.com#credits"
+  weight = 50

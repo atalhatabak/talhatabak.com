@@ -1,0 +1,45 @@
+{{- /*
+  Archive: every post of every category, grouped by year.
+  Used by content/posts/index*.md (layout: archive).
+*/ -}}
+{{ define "main" }}
+  {{ $posts := where site.RegularPages "Section" "in" site.Params.mainSections }}
+  <div class="page-shell">
+    <header class="list-header">
+      <p class="list-eyebrow">{{ partial "blog/icon.html" "archive" }}<span>{{ i18n "blog.archive" }}</span></p>
+      <h1 class="list-title">{{ .Title | emojify }}</h1>
+      {{ with .Description }}
+        <p class="list-lead">{{ . | markdownify }}</p>
+      {{ end }}
+      <ul class="list-stats" role="list">
+        <li>{{ partial "blog/icon.html" "book-open" }}{{ i18n "blog.posts" (len $posts) }}</li>
+      </ul>
+    </header>
+
+    {{ with .Content }}
+      <div class="list-intro article-content prose dark:prose-invert">{{ . }}</div>
+    {{ end }}
+
+    {{ range $posts.GroupByDate "2006" }}
+      <section class="archive-year" aria-labelledby="year-{{ .Key }}">
+        <h2 class="archive-year__title" id="year-{{ .Key }}">
+          {{ .Key }}<span class="archive-year__count">{{ len .Pages }}</span>
+        </h2>
+        <ol class="archive-list" role="list">
+          {{ range .Pages }}
+            {{ $section := .CurrentSection }}
+            <li class="archive-item">
+              <time class="archive-item__date" datetime="{{ .Date | time.Format "2006-01-02" }}">{{ .Date | time.Format "02 Jan" }}</time>
+              <a class="archive-item__title" href="{{ .RelPermalink }}">{{ .Title | emojify }}</a>
+              <span class="archive-item__meta">
+                {{- if and $section (not $section.IsHome) }}{{ $section.Title }}{{ end -}}
+                {{- with .Params.chapter }} · {{ i18n "blog.part" (dict "Chapter" .) }}{{ end -}}
+                {{- if .Draft }} · {{ i18n "article.draft" }}{{ end -}}
+              </span>
+            </li>
+          {{ end }}
+        </ol>
+      </section>
+    {{ end }}
+  </div>
+{{ end }}
